@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Zap } from 'lucide-react';
 import { Button } from '../components/Button';
 import { ToolCard } from '../components/ToolCard';
-import { toolsData } from '../data/tools';
-import type { Category } from '../data/tools';
+import type { Category, Tool } from '../data/tools';
+import { mapDbToTool } from '../data/tools';
+import { supabase } from '../lib/supabase';
 import './Home.css';
 
 const CATEGORIES: { label: string; value: Category | 'All' }[] = [
@@ -18,6 +19,29 @@ const CATEGORIES: { label: string; value: Category | 'All' }[] = [
 
 export const Home: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All');
+  const [toolsData, setToolsData] = useState<Tool[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTools = async () => {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from('tools')
+        .select('*')
+        .eq('status', 'approved')
+        .order('featured', { ascending: false })
+        .order('date_added', { ascending: false });
+        
+      if (data && !error) {
+        setToolsData(data.map(mapDbToTool));
+      } else if (error) {
+        console.error('Error fetching tools:', error);
+      }
+      setIsLoading(false);
+    };
+    
+    fetchTools();
+  }, []);
 
   const filteredTools = toolsData.filter(tool => {
     if (activeCategory === 'All') return true;
@@ -49,7 +73,7 @@ export const Home: React.FC = () => {
           
           <div className="hero-stats">
             <div className="stat-item">
-              <div className="stat-value">{toolsData.length}+</div>
+              <div className="stat-value">{isLoading ? '...' : toolsData.length}+</div>
               <div className="stat-label">Tools Listed</div>
             </div>
             <div className="stat-item">
@@ -87,7 +111,11 @@ export const Home: React.FC = () => {
           ))}
         </div>
 
-        {filteredTools.length > 0 ? (
+        {isLoading ? (
+          <div className="empty-state">
+            <p>Loading tools...</p>
+          </div>
+        ) : filteredTools.length > 0 ? (
           <div className="tools-grid">
             {filteredTools.map(tool => (
               <ToolCard key={tool.id} tool={tool} />

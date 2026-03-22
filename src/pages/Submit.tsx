@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '../components/Button';
-import { toolsData } from '../data/tools';
-import type { Tool, Category, PricingModel } from '../data/tools';
+import { supabase } from '../lib/supabase';
 import './Submit.css';
 
 export const Submit: React.FC = () => {
@@ -17,31 +16,40 @@ export const Submit: React.FC = () => {
     submitterEmail: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setErrorMsg('');
     
-    const newTool: Tool = {
-      id: formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-      name: formData.name,
-      shortDescription: formData.shortDescription,
-      longDescription: formData.whyUse,
-      category: formData.category as Category,
-      pricing: formData.pricing as PricingModel,
-      websiteUrl: formData.websiteUrl,
-      starRating: 5, // Start new tools with 5 star default rating
-      featured: false,
-      dateAdded: new Date().toISOString(),
-      submittedBy: formData.submitterName
-    };
+    // Attempt Supabase insert
+    const { error } = await supabase.from('tools').insert([
+      {
+        name: formData.name,
+        short_description: formData.shortDescription,
+        long_description: formData.whyUse,
+        category: formData.category,
+        pricing: formData.pricing,
+        website_url: formData.websiteUrl,
+        submitted_by: formData.submitterName,
+      }
+    ]);
 
-    toolsData.unshift(newTool); // Add to the top of the directory
-    setIsSubmitted(true);
+    setIsSubmitting(false);
+
+    if (error) {
+      console.error('Error inserting tool:', error);
+      setErrorMsg('There was an error communicating with the database. Please check your connection and environment variables.');
+    } else {
+      setIsSubmitted(true);
+    }
   };
 
   if (isSubmitted) {
@@ -50,8 +58,11 @@ export const Submit: React.FC = () => {
         <div className="success-container">
           <CheckCircle size={64} className="success-icon" />
           <h2>Thanks for your submission!</h2>
-          <p>We've received your tool recommendation and will review it within 48 hours.</p>
-          <Button variant="outline" onClick={() => setIsSubmitted(false)}>Submit another tool</Button>
+          <p>We've received your tool recommendation and it has been added to our pending review queue.</p>
+          <Button variant="outline" onClick={() => {
+            setIsSubmitted(false);
+            setFormData(prev => ({ ...prev, name: '', websiteUrl: '', shortDescription: '', whyUse: '' }));
+          }}>Submit another tool</Button>
         </div>
       </div>
     );
@@ -65,6 +76,12 @@ export const Submit: React.FC = () => {
       </div>
 
       <form className="submit-form" onSubmit={handleSubmit}>
+        {errorMsg && (
+          <div style={{ backgroundColor: '#fee2e2', color: '#b91c1c', padding: '12px', borderRadius: '8px', marginBottom: '24px' }}>
+            {errorMsg}
+          </div>
+        )}
+
         <div className="form-group">
           <label htmlFor="name">Tool Name *</label>
           <input 
@@ -75,6 +92,7 @@ export const Submit: React.FC = () => {
             value={formData.name} 
             onChange={handleChange} 
             placeholder="e.g. ChatGPT"
+            disabled={isSubmitting}
           />
         </div>
 
@@ -88,6 +106,7 @@ export const Submit: React.FC = () => {
             value={formData.websiteUrl} 
             onChange={handleChange} 
             placeholder="https://..."
+            disabled={isSubmitting}
           />
         </div>
 
@@ -100,6 +119,7 @@ export const Submit: React.FC = () => {
               required 
               value={formData.category} 
               onChange={handleChange}
+              disabled={isSubmitting}
             >
               <option value="Writing & Copy">Writing & Copy</option>
               <option value="Research">Research</option>
@@ -121,6 +141,7 @@ export const Submit: React.FC = () => {
               required 
               value={formData.pricing} 
               onChange={handleChange}
+              disabled={isSubmitting}
             >
               <option value="Free">Free</option>
               <option value="Freemium">Freemium</option>
@@ -140,6 +161,7 @@ export const Submit: React.FC = () => {
             value={formData.shortDescription} 
             onChange={handleChange}
             placeholder="Describe what the tool does in one sentence."
+            disabled={isSubmitting}
           />
           <div className="char-count">
             {formData.shortDescription.length}/120
@@ -156,6 +178,7 @@ export const Submit: React.FC = () => {
             value={formData.whyUse} 
             onChange={handleChange}
             placeholder="Explain how this helps with essays, research, decks, etc."
+            disabled={isSubmitting}
           />
         </div>
 
@@ -170,6 +193,7 @@ export const Submit: React.FC = () => {
               name="submitterName" 
               value={formData.submitterName} 
               onChange={handleChange} 
+              disabled={isSubmitting}
             />
           </div>
 
@@ -181,11 +205,18 @@ export const Submit: React.FC = () => {
               name="submitterEmail" 
               value={formData.submitterEmail} 
               onChange={handleChange} 
+              disabled={isSubmitting}
             />
           </div>
         </div>
 
-        <Button type="submit" size="lg" fullWidth>Submit Tool for Review</Button>
+        <Button type="submit" size="lg" fullWidth disabled={isSubmitting}>
+          {isSubmitting ? (
+            <><Loader2 className="animate-spin" size={18} style={{ marginRight: '8px' }} /> Submitting...</>
+          ) : (
+            'Submit Tool for Review'
+          )}
+        </Button>
       </form>
     </div>
   );

@@ -1,15 +1,38 @@
-import React, { useState, useMemo } from 'react';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Search, SlidersHorizontal, Loader2 } from 'lucide-react';
 import { ToolCard } from '../components/ToolCard';
-import { toolsData } from '../data/tools';
-import type { Category, PricingModel } from '../data/tools';
+import type { Category, PricingModel, Tool } from '../data/tools';
+import { mapDbToTool } from '../data/tools';
+import { supabase } from '../lib/supabase';
 import './Browse.css';
 
 export const Browse: React.FC = () => {
+  const [toolsData, setToolsData] = useState<Tool[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category | 'All'>('All');
   const [selectedPricing, setSelectedPricing] = useState<PricingModel | 'All'>('All');
   const [minRating, setMinRating] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchTools = async () => {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from('tools')
+        .select('*')
+        .eq('status', 'approved')
+        .order('date_added', { ascending: false });
+        
+      if (data && !error) {
+        setToolsData(data.map(mapDbToTool));
+      } else if (error) {
+        console.error('Error fetching tools:', error);
+      }
+      setIsLoading(false);
+    };
+    
+    fetchTools();
+  }, []);
 
   const categories: (Category | 'All')[] = ['All', 'Writing & Copy', 'Research', 'Design & Decks', 'Analytics', 'Cold Outreach', 'Productivity', 'Video & Media', 'Social Media', 'Other'];
   const pricingModels: (PricingModel | 'All')[] = ['All', 'Free', 'Freemium', 'Paid'];
@@ -20,7 +43,7 @@ export const Browse: React.FC = () => {
       const matchesSearch = 
         tool.name.toLowerCase().includes(query) || 
         tool.shortDescription.toLowerCase().includes(query) ||
-        tool.longDescription.toLowerCase().includes(query) ||
+        (tool.longDescription && tool.longDescription.toLowerCase().includes(query)) ||
         tool.category.toLowerCase().includes(query);
       const matchesCategory = selectedCategory === 'All' || tool.category === selectedCategory;
       const matchesPricing = selectedPricing === 'All' || tool.pricing === selectedPricing;
@@ -28,7 +51,7 @@ export const Browse: React.FC = () => {
       
       return matchesSearch && matchesCategory && matchesPricing && matchesRating;
     });
-  }, [searchQuery, selectedCategory, selectedPricing, minRating]);
+  }, [toolsData, searchQuery, selectedCategory, selectedPricing, minRating]);
 
   return (
     <div className="browse-page container">
@@ -118,21 +141,30 @@ export const Browse: React.FC = () => {
 
         {/* Results Area */}
         <div className="browse-results">
-          <div className="results-header">
-            <span>Showing {filteredTools.length} tool{filteredTools.length !== 1 ? 's' : ''}</span>
-          </div>
-
-          {filteredTools.length > 0 ? (
-            <div className="tools-grid">
-              {filteredTools.map(tool => (
-                <ToolCard key={tool.id} tool={tool} />
-              ))}
+          {isLoading ? (
+            <div className="no-results" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', border: 'none', background: 'transparent' }}>
+              <Loader2 className="animate-spin" size={32} color="var(--primary)" />
+              <p>Loading tools database...</p>
             </div>
           ) : (
-            <div className="no-results">
-              <h3>No tools found</h3>
-              <p>Try adjusting your search or filters.</p>
-            </div>
+            <>
+              <div className="results-header">
+                <span>Showing {filteredTools.length} tool{filteredTools.length !== 1 ? 's' : ''}</span>
+              </div>
+
+              {filteredTools.length > 0 ? (
+                <div className="tools-grid">
+                  {filteredTools.map(tool => (
+                    <ToolCard key={tool.id} tool={tool} />
+                  ))}
+                </div>
+              ) : (
+                <div className="no-results">
+                  <h3>No tools found</h3>
+                  <p>Try adjusting your search or filters.</p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
