@@ -4,6 +4,7 @@ import { Home } from './pages/Home';
 import { Browse } from './pages/Browse';
 import { Submit } from './pages/Submit';
 import { ToolDetail } from './pages/ToolDetail';
+import { Admin } from './pages/Admin';
 import './index.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/browse" element={<Browse />} />
           <Route path="/submit" element={<Submit />} />
           <Route path="/tool/:id" element={<ToolDetail />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </Layout>
     </Router>

@@ -16,7 +16,6 @@ export const Navbar: React.FC = () => {
           
           <div className="navbar-links">
             <Link to="/browse" className="nav-link">Browse list</Link>
-            <a href="#newsletter" className="nav-link">Newsletter</a>
             <Link to="/submit">
               <Button variant="primary" size="sm">Submit a Tool</Button>
             </Link>
