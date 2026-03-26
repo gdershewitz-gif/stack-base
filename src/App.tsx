@@ -3,7 +3,7 @@ import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
 import { Browse } from './pages/Browse';
 import { Submit } from './pages/Submit';
-import { ToolDetail } from './pages/ToolDetail';
+import { ProjectDetail } from './pages/ProjectDetail';
 import { Admin } from './pages/Admin';
 import './index.css';
 
@@ -15,7 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/browse" element={<Browse />} />
           <Route path="/submit" element={<Submit />} />
-          <Route path="/tool/:id" element={<ToolDetail />} />
+          <Route path="/project/:id" element={<ProjectDetail />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
       </Layout>

@@ -1,52 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Zap } from 'lucide-react';
+import { ArrowRight, Users } from 'lucide-react';
 import { Button } from '../components/Button';
-import { ToolCard } from '../components/ToolCard';
-import type { Category, Tool } from '../data/tools';
-import { mapDbToTool } from '../data/tools';
+import { ProjectCard } from '../components/ProjectCard';
+import type { Category, Project } from '../data/projects';
+import { mapDbToProject } from '../data/projects';
 import { supabase } from '../lib/supabase';
 import './Home.css';
 
 const CATEGORIES: { label: string; value: Category | 'All' }[] = [
-  { label: 'All Tools', value: 'All' },
-  { label: 'Writing & Copy', value: 'Writing & Copy' },
-  { label: 'Research', value: 'Research' },
-  { label: 'Design & Decks', value: 'Design & Decks' },
-  { label: 'Analytics', value: 'Analytics' },
-  { label: 'Cold Outreach', value: 'Cold Outreach' }
+  { label: 'All Projects', value: 'All' },
+  { label: 'App or Website', value: 'App or Website' },
+  { label: 'Business or Brand', value: 'Business or Brand' },
+  { label: 'Nonprofit', value: 'Nonprofit' },
+  { label: 'Product or Ecommerce', value: 'Product or Ecommerce' },
+  { label: 'Side Hustle', value: 'Side Hustle' },
+  { label: 'Newsletter or Blog', value: 'Newsletter or Blog' },
+  { label: 'Other', value: 'Other' }
 ];
 
 export const Home: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All');
-  const [toolsData, setToolsData] = useState<Tool[]>([]);
+  const [projectsData, setProjectsData] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchTools = async () => {
+    const fetchProjects = async () => {
       setIsLoading(true);
       const { data, error } = await supabase
-        .from('tools')
+        .from('projects')
         .select('*')
         .eq('status', 'approved')
-        .order('featured', { ascending: false })
+        .order('upvotes', { ascending: false })
         .order('date_added', { ascending: false });
         
       if (data && !error) {
-        setToolsData(data.map(mapDbToTool));
+        setProjectsData(data.map(mapDbToProject));
       } else if (error) {
-        console.error('Error fetching tools:', error);
+        console.error('Error fetching projects:', error);
       }
       setIsLoading(false);
     };
     
-    fetchTools();
+    fetchProjects();
   }, []);
 
-  const filteredTools = toolsData.filter(tool => {
+  const filteredProjects = projectsData.filter(proj => {
     if (activeCategory === 'All') return true;
-    return tool.category === activeCategory;
+    return proj.category === activeCategory;
   });
+
+  // Calculate dynamic stats from actual data
+  const totalFounders = useMemo(() => new Set(projectsData.map(p => p.founderName)).size, [projectsData]);
+  const totalSchools = useMemo(() => new Set(projectsData.filter(p => p.schoolName).map(p => p.schoolName)).size, [projectsData]);
+  const openRoles = useMemo(() => projectsData.reduce((acc, p) => p.recruiting && p.rolesNeeded ? acc + p.rolesNeeded.length : acc, 0), [projectsData]);
 
   return (
     <div className="home-page">
@@ -55,48 +62,48 @@ export const Home: React.FC = () => {
         <div className="container hero-container">
           <Badge />
           <h1 className="hero-title">
-            Find The <span className="text-primary">Exact AI Tool</span> Your Business Needs, In Seconds.
+            Built by students. <span className="text-primary">For students.</span>
           </h1>
           <p className="hero-subtitle">
-            300+ AI tools for online business. Searchable, rated, and updated weekly by operators who actually use them.
+            The home for student founders to share what they built, inspire the next generation, and find their team.
           </p>
           <div className="hero-cta-group">
             <Link to="/browse">
               <Button size="lg" className="hero-btn">
-                Browse All Tools <ArrowRight size={18} className="ml-2" />
+                Browse Projects <ArrowRight size={18} className="ml-2" />
               </Button>
             </Link>
             <Link to="/submit">
-              <Button variant="outline" size="lg">Submit a Tool</Button>
+              <Button variant="outline" size="lg">Submit Your Project</Button>
             </Link>
           </div>
           
           <div className="hero-stats">
             <div className="stat-item">
-              <div className="stat-value">{isLoading ? '...' : toolsData.length}+</div>
-              <div className="stat-label">Tools Listed</div>
+              <div className="stat-value">{isLoading ? '...' : projectsData.length}</div>
+              <div className="stat-label">Projects Listed</div>
             </div>
             <div className="stat-item">
-              <div className="stat-value">9</div>
-              <div className="stat-label">Categories</div>
+              <div className="stat-value">{isLoading ? '...' : totalFounders}</div>
+              <div className="stat-label">Student Founders</div>
             </div>
             <div className="stat-item">
-              <div className="stat-value">12k</div>
-              <div className="stat-label">Monthly Visitors</div>
+              <div className="stat-value">{isLoading ? '...' : totalSchools}</div>
+              <div className="stat-label">Schools Represented</div>
             </div>
             <div className="stat-item">
-              <div className="stat-value">Weekly</div>
-              <div className="stat-label">Updates</div>
+              <div className="stat-value">{isLoading ? '...' : openRoles}</div>
+              <div className="stat-label">Open Roles</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Tools Grid Section */}
+      {/* Grid Section */}
       <section className="tools-section container">
         <div className="tools-header">
-          <h2>Featured AI Tools</h2>
-          <p>The most popular tools right now.</p>
+          <h2>Trending Student Projects</h2>
+          <p>Discover what other students are building right now.</p>
         </div>
 
         <div className="category-filters">
@@ -113,18 +120,18 @@ export const Home: React.FC = () => {
 
         {isLoading ? (
           <div className="empty-state">
-            <p>Loading tools...</p>
+            <p>Loading projects...</p>
           </div>
-        ) : filteredTools.length > 0 ? (
+        ) : filteredProjects.length > 0 ? (
           <div className="tools-grid">
-            {filteredTools.map(tool => (
-              <ToolCard key={tool.id} tool={tool} />
+            {filteredProjects.map(proj => (
+              <ProjectCard key={proj.id} project={proj} />
             ))}
           </div>
         ) : (
           <div className="empty-state">
-            <p>No tools found in this category.</p>
-            <Button variant="outline" onClick={() => setActiveCategory('All')}>View All Tools</Button>
+            <p>No projects found in this category.</p>
+            <Button variant="outline" onClick={() => setActiveCategory('All')}>View All Projects</Button>
           </div>
         )}
       </section>
@@ -133,11 +140,11 @@ export const Home: React.FC = () => {
       <section className="bottom-cta-section container">
         <div className="bottom-cta-box">
           <div className="bottom-cta-content">
-            <h2>Know a tool we're missing?</h2>
-            <p>Help other students discover the best AI tools by submitting your favorites.</p>
+            <h2>Are you building something?</h2>
+            <p>Share your startup, app, or side hustle with a community of student builders.</p>
           </div>
           <Link to="/submit">
-            <Button size="lg" className="submit-btn-cta">Submit it here</Button>
+            <Button size="lg" className="submit-btn-cta">Submit Your Project</Button>
           </Link>
         </div>
       </section>
@@ -147,7 +154,7 @@ export const Home: React.FC = () => {
 
 const Badge = () => (
   <div className="hero-badge">
-    <Zap size={14} className="hero-badge-icon" />
-    <span>Updated for Spring 2026</span>
+    <Users size={14} className="hero-badge-icon" />
+    <span>Join the #1 Student Founder Community</span>
   </div>
 );
