@@ -22,6 +22,7 @@ const CATEGORIES: { label: string; value: Category | 'All' }[] = [
 export const Home: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All');
   const [projectsData, setProjectsData] = useState<Project[]>([]);
+  const [trendingProjects, setTrendingProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -39,6 +40,22 @@ export const Home: React.FC = () => {
       } else if (error) {
         console.error('Error fetching projects:', error);
       }
+
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      
+      const { data: trendingData } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('status', 'approved')
+        .gte('date_added', oneWeekAgo.toISOString())
+        .order('upvotes', { ascending: false })
+        .limit(5);
+        
+      if (trendingData) {
+        setTrendingProjects(trendingData.map(mapDbToProject));
+      }
+
       setIsLoading(false);
     };
     
@@ -99,10 +116,28 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Trending Section */}
+      {trendingProjects.length > 0 && (
+        <section className="trending-section container">
+          <div className="trending-header">
+            <h2>🔥 Trending This Week</h2>
+            <p>The highest upvoted projects submitted in the last 7 days.</p>
+          </div>
+          
+          <div className="trending-horizontal-scroll">
+            {trendingProjects.map(proj => (
+              <div key={proj.id} className="trending-card-wrapper">
+                <ProjectCard project={proj} />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Grid Section */}
       <section className="tools-section container">
         <div className="tools-header">
-          <h2>Trending Student Projects</h2>
+          <h2>All Student Projects</h2>
           <p>Discover what other students are building right now.</p>
         </div>
 

@@ -109,8 +109,8 @@
 
 .upvote-btn-massive {
   width: 100%;
-  background-color: white;
-  border: 2px solid var(--border-color);
+  background-color: transparent;
+  border: 2px solid var(--primary);
   border-radius: 12px;
   padding: 16px;
   display: flex;
@@ -119,18 +119,21 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s;
-  color: var(--text-main);
+  color: var(--primary);
 }
 
 .upvote-btn-massive:hover {
-  border-color: var(--primary);
   background-color: #f0fdf4;
 }
 
 .upvote-btn-massive.upvoted {
-  background-color: #ecfdf5;
+  background-color: var(--primary);
   border-color: var(--primary);
-  color: var(--primary);
+  color: #ffffff;
+}
+
+.upvote-btn-massive.bounce {
+  animation: bounce 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .upvote-btn-massive .upvote-count {

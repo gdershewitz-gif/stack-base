@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Instagram, Youtube, Linkedin, Link as LinkIcon, MessageCircle, FileText, Video, ExternalLink } from 'lucide-react';
+import { Instagram, Youtube, Linkedin, Link as LinkIcon, MessageCircle, FileText, Video, ExternalLink, ChevronUp } from 'lucide-react';
 import type { Project } from '../data/projects';
+import { supabase } from '../lib/supabase';
 import './ProjectCard.css';
 
 interface ProjectCardProps {
@@ -10,6 +11,46 @@ interface ProjectCardProps {
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const navigate = useNavigate();
+  const [upvotes, setUpvotes] = useState(project.upvotes || 0);
+  const [hasUpvoted, setHasUpvoted] = useState(false);
+  const [isBouncing, setIsBouncing] = useState(false);
+
+  useEffect(() => {
+    const list = JSON.parse(localStorage.getItem('stagone_upvotes') || '[]');
+    if (list.includes(project.id)) {
+      setHasUpvoted(true);
+    }
+    setUpvotes(project.upvotes || 0);
+  }, [project.id, project.upvotes]);
+
+  const handleUpvoteToggle = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    setIsBouncing(true);
+    setTimeout(() => setIsBouncing(false), 300);
+
+    const list = JSON.parse(localStorage.getItem('stagone_upvotes') || '[]');
+
+    if (hasUpvoted) {
+      setUpvotes(prev => prev - 1);
+      setHasUpvoted(false);
+      const filteredList = list.filter((id: string) => id !== project.id);
+      localStorage.setItem('stagone_upvotes', JSON.stringify(filteredList));
+    } else {
+      setUpvotes(prev => prev + 1);
+      setHasUpvoted(true);
+      if (!list.includes(project.id)) {
+        list.push(project.id);
+        localStorage.setItem('stagone_upvotes', JSON.stringify(list));
+      }
+    }
+
+    const { data: current } = await supabase.from('projects').select('upvotes').eq('id', project.id).single();
+    if (current) {
+      const finalCount = hasUpvoted ? current.upvotes - 1 : current.upvotes + 1;
+      await supabase.from('projects').update({ upvotes: Math.max(0, finalCount) }).eq('id', project.id);
+    }
+  };
 
   const getKeywords = (desc: string, category: string) => {
     const keywords = new Set<string>();
@@ -95,34 +136,49 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         ))}
       </div>
 
-      {(project.demoUrl || project.socialUrl) && (
-        <div className="pc2-footer">
-          <div className="pc2-links-row">
-            {project.demoUrl && (
-              <a 
-                href={project.demoUrl} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="pc2-social-btn"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <ExternalLink size={14} /> Website
-              </a>
-            )}
-            {socialPlat && project.socialUrl && (
-              <a 
-                href={project.socialUrl} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="pc2-social-btn"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <socialPlat.icon size={14} /> {socialPlat.name}
-              </a>
-            )}
-          </div>
+      <div className="pc2-footer">
+        <div className="pc2-action-bar">
+          <button 
+            className={`pc2-upvote-toggle ${hasUpvoted ? 'upvoted' : ''} ${isBouncing ? 'bounce' : ''}`}
+            onClick={handleUpvoteToggle}
+          >
+            <div className="upvote-toggle-left">
+              <ChevronUp size={18} strokeWidth={hasUpvoted ? 3 : 2} />
+              <span>{hasUpvoted ? 'Upvoted' : 'Upvote'}</span>
+            </div>
+            <div className="upvote-toggle-badge">
+              {upvotes}
+            </div>
+          </button>
+
+          {(project.demoUrl || project.socialUrl) && (
+            <div className="pc2-links-row">
+              {project.demoUrl && (
+                <a 
+                  href={project.demoUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="pc2-social-btn"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <ExternalLink size={14} /> Website
+                </a>
+              )}
+              {socialPlat && project.socialUrl && (
+                <a 
+                  href={project.socialUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="pc2-social-btn"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <socialPlat.icon size={14} /> {socialPlat.name}
+                </a>
+              )}
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

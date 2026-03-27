@@ -15,7 +15,9 @@ export const ProjectDetail: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   
   const [isLoading, setIsLoading] = useState(true);
+  const [upvotes, setUpvotes] = useState(0);
   const [hasUpvoted, setHasUpvoted] = useState(false);
+  const [isBouncing, setIsBouncing] = useState(false);
   
   const [newCommentName, setNewCommentName] = useState('');
   const [newCommentText, setNewCommentText] = useState('');
@@ -36,6 +38,12 @@ export const ProjectDetail: React.FC = () => {
       if (data && !error) {
         const fetchedProject = mapDbToProject(data);
         setProject(fetchedProject);
+        setUpvotes(fetchedProject.upvotes);
+
+        const list = JSON.parse(localStorage.getItem('stagone_upvotes') || '[]');
+        if (list.includes(fetchedProject.id)) {
+          setHasUpvoted(true);
+        }
 
         // Fetch related projects
         const { data: relatedData } = await supabase
@@ -76,16 +84,33 @@ export const ProjectDetail: React.FC = () => {
     fetchProject();
   }, [id]);
 
-  const handleUpvote = async () => {
-    if (hasUpvoted || !project) return;
+  const handleUpvoteToggle = async () => {
+    if (!project) return;
     
-    setProject({ ...project, upvotes: project.upvotes + 1 });
-    setHasUpvoted(true);
+    setIsBouncing(true);
+    setTimeout(() => setIsBouncing(false), 300);
 
-    await supabase
-      .from('projects')
-      .update({ upvotes: project.upvotes + 1 })
-      .eq('id', project.id);
+    const list = JSON.parse(localStorage.getItem('stagone_upvotes') || '[]');
+
+    if (hasUpvoted) {
+      setUpvotes(prev => prev - 1);
+      setHasUpvoted(false);
+      const filteredList = list.filter((id: string) => id !== project.id);
+      localStorage.setItem('stagone_upvotes', JSON.stringify(filteredList));
+    } else {
+      setUpvotes(prev => prev + 1);
+      setHasUpvoted(true);
+      if (!list.includes(project.id)) {
+        list.push(project.id);
+        localStorage.setItem('stagone_upvotes', JSON.stringify(list));
+      }
+    }
+
+    const { data: current } = await supabase.from('projects').select('upvotes').eq('id', project.id).single();
+    if (current) {
+      const finalCount = hasUpvoted ? current.upvotes - 1 : current.upvotes + 1;
+      await supabase.from('projects').update({ upvotes: Math.max(0, finalCount) }).eq('id', project.id);
+    }
   };
 
   const handlePostComment = async (e: React.FormEvent) => {
@@ -202,11 +227,11 @@ export const ProjectDetail: React.FC = () => {
             <h3>{project.shortDescription}</h3>
             
             <button 
-              className={`upvote-btn-massive mt-4 ${hasUpvoted ? 'upvoted' : ''}`}
-              onClick={handleUpvote}
+              className={`upvote-btn-massive mt-4 ${hasUpvoted ? 'upvoted' : ''} ${isBouncing ? 'bounce' : ''}`}
+              onClick={handleUpvoteToggle}
             >
-              <ChevronUp size={24} />
-              <div className="upvote-count">{project.upvotes}</div>
+              <ChevronUp size={24} strokeWidth={hasUpvoted ? 3 : 2} />
+              <div className="upvote-count">{upvotes}</div>
               <div className="upvote-label">{hasUpvoted ? 'Upvoted' : 'Upvote Project'}</div>
             </button>
 

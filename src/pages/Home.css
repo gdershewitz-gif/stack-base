@@ -173,6 +173,53 @@
   white-space: nowrap;
 }
 
+.trending-section {
+  padding: 80px 1.5rem 0;
+}
+
+.trending-header {
+  margin-bottom: 32px;
+}
+
+.trending-header h2 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.trending-header p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+.trending-horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 24px;
+  padding-bottom: 32px; 
+  margin: 0 -1.5rem; 
+  padding: 16px 1.5rem 32px;
+  scroll-snap-type: x mandatory;
+}
+
+.trending-horizontal-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.trending-horizontal-scroll::-webkit-scrollbar-track {
+  background: var(--bg-color);
+  border-radius: 4px;
+}
+
+.trending-horizontal-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.trending-card-wrapper {
+  flex: 0 0 350px;
+  scroll-snap-align: start;
+}
+
 @media (max-width: 768px) {
   .hero-title {
     font-size: 2.5rem;

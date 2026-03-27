@@ -12,6 +12,7 @@ export const Browse: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category | 'All'>('All');
   const [recruitingOnly, setRecruitingOnly] = useState(false);
+  const [activeTab, setActiveTab] = useState<'upvotes' | 'newest' | 'recruiting'>('upvotes');
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -44,8 +45,8 @@ export const Browse: React.FC = () => {
     'Other'
   ];
 
-  const filteredProjects = useMemo(() => {
-    return projectsData.filter((proj) => {
+  const processedProjects = useMemo(() => {
+    let result = projectsData.filter((proj) => {
       const query = searchQuery.toLowerCase();
       const matchesSearch = 
         proj.name.toLowerCase().includes(query) || 
@@ -59,7 +60,18 @@ export const Browse: React.FC = () => {
       
       return matchesSearch && matchesCategory && matchesRecruiting;
     });
-  }, [projectsData, searchQuery, selectedCategory, recruitingOnly]);
+
+    if (activeTab === 'recruiting') {
+      result = result.filter(p => p.recruiting);
+      result.sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime());
+    } else if (activeTab === 'newest') {
+      result.sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime());
+    } else {
+      result.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+    }
+
+    return result;
+  }, [projectsData, searchQuery, selectedCategory, recruitingOnly, activeTab]);
 
   return (
     <div className="browse-page container">
@@ -138,12 +150,17 @@ export const Browse: React.FC = () => {
           ) : (
             <>
               <div className="results-header">
-                <span>Showing {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''}</span>
+                <span>Showing {processedProjects.length} project{processedProjects.length !== 1 ? 's' : ''}</span>
+                <div className="sort-toggle">
+                  <button className={`sort-tab ${activeTab === 'upvotes' ? 'active' : ''}`} onClick={() => setActiveTab('upvotes')}>Most Upvoted</button>
+                  <button className={`sort-tab ${activeTab === 'newest' ? 'active' : ''}`} onClick={() => setActiveTab('newest')}>Newest</button>
+                  <button className={`sort-tab ${activeTab === 'recruiting' ? 'active' : ''}`} onClick={() => setActiveTab('recruiting')}>Recruiting Now</button>
+                </div>
               </div>
 
-              {filteredProjects.length > 0 ? (
+              {processedProjects.length > 0 ? (
                 <div className="tools-grid">
-                  {filteredProjects.map(proj => (
+                  {processedProjects.map(proj => (
                     <ProjectCard key={proj.id} project={proj} />
                   ))}
                 </div>
