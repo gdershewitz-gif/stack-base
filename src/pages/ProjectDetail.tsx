@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ExternalLink, ArrowLeft, Users, ChevronUp, MessageSquare, Loader2 } from 'lucide-react';
+import { ExternalLink, ArrowLeft, Users, ChevronUp, MessageSquare, Loader2, Instagram } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { Project, Comment } from '../data/projects';
 import { mapDbToProject } from '../data/projects';
@@ -150,7 +150,7 @@ export const ProjectDetail: React.FC = () => {
             <div className="project-hero-info">
               <h1>{project.name}</h1>
               <div className="project-meta-tags">
-                <span className="project-cat-tag">{project.category}</span>
+                <span className="project-cat-tag" data-category={project.category}>{project.category}</span>
                 <span className="project-badge text-muted">
                   Founder: {project.founderName} ({project.gradeOrAge})
                 </span>
@@ -218,13 +218,6 @@ export const ProjectDetail: React.FC = () => {
                   </Button>
                 </a>
               )}
-              {project.socialUrl && (
-                <a href={project.socialUrl} target="_blank" rel="noopener noreferrer">
-                  <Button variant="outline" fullWidth className="mt-2">
-                    Follow on Social
-                  </Button>
-                </a>
-              )}
             </div>
 
             <hr className="sidebar-divider" />
@@ -238,14 +231,34 @@ export const ProjectDetail: React.FC = () => {
                   <p className="mt-2 text-sm text-center">
                     {project.founderName} is looking for: <br/> <strong>{project.rolesNeeded.join(', ')}</strong>
                   </p>
-                  <a href={`mailto:${project.founderEmail}?subject=Interested in joining the ${project.name} team!`} className="block mt-4">
-                    <Button variant="primary" fullWidth>Join the Team</Button>
-                  </a>
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
+                    <a href={`mailto:${project.founderEmail}?subject=Interested in joining the ${project.name} team!`} className="flex-1 block" style={{ flex: 1 }}>
+                      <Button variant="primary" fullWidth>Join the Team</Button>
+                    </a>
+                    {project.socialUrl && (
+                      <a href={project.socialUrl} target="_blank" rel="noopener noreferrer">
+                        <Button variant="outline" style={{ padding: '0 16px', height: '100%', display: 'flex', alignItems: 'center' }}>
+                          <Instagram size={20} />
+                        </Button>
+                      </a>
+                    )}
+                  </div>
                 </>
               ) : (
-                <div className="recruiting-status inactive text-muted">
-                  Not currently recruiting
-                </div>
+                <>
+                  <div className="recruiting-status inactive text-muted">
+                    Not currently recruiting
+                  </div>
+                  {project.socialUrl && (
+                    <div style={{ marginTop: '16px' }}>
+                      <a href={project.socialUrl} target="_blank" rel="noopener noreferrer" className="block">
+                        <Button variant="outline" fullWidth style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                          <Instagram size={18} /> Founder's Instagram
+                        </Button>
+                      </a>
+                    </div>
+                  )}
+                </>
               )}
             </div>
 

@@ -206,8 +206,8 @@ export const Submit: React.FC = () => {
               <input type="text" id="founderName" name="founderName" required value={formData.founderName} onChange={handleChange} disabled={isSubmitting} />
             </div>
             <div className="form-group">
-              <label htmlFor="gradeOrAge">Grade or Age *</label>
-              <input type="text" id="gradeOrAge" name="gradeOrAge" required value={formData.gradeOrAge} onChange={handleChange} disabled={isSubmitting} placeholder="e.g. 11th Grade, High School Junior, 16" />
+              <label htmlFor="gradeOrAge">Grade or Age (Optional)</label>
+              <input type="text" id="gradeOrAge" name="gradeOrAge" value={formData.gradeOrAge} onChange={handleChange} disabled={isSubmitting} placeholder="e.g. 11th Grade, High School Junior, 16" />
             </div>
           </div>
           

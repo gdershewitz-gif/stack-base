@@ -122,28 +122,7 @@
   margin-bottom: 48px;
 }
 
-.filter-pill {
-  padding: 8px 16px;
-  border-radius: 9999px;
-  border: 1px solid var(--border-color);
-  background-color: var(--bg-color);
-  color: var(--text-muted);
-  font-weight: 500;
-  font-size: 0.95rem;
-  transition: all 0.2s;
-}
-
-.filter-pill:hover {
-  border-color: #d1d5db;
-  color: var(--text-main);
-}
-
-.filter-pill.active {
-  background-color: var(--primary);
-  border-color: var(--primary);
-  color: white;
-  box-shadow: 0 4px 6px -1px rgba(29, 158, 117, 0.2);
-}
+/* Filter pills are now global in index.css */
 
 .tools-grid {
   display: grid;

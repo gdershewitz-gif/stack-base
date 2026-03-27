@@ -111,6 +111,7 @@ export const Home: React.FC = () => {
             <button 
               key={cat.value}
               className={`filter-pill ${activeCategory === cat.value ? 'active' : ''}`}
+              data-active-cat={cat.value}
               onClick={() => setActiveCategory(cat.value)}
             >
               {cat.label}

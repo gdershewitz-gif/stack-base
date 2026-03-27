@@ -104,15 +104,14 @@ export const Browse: React.FC = () => {
             <h4>Category</h4>
             <div className="filter-options">
               {categories.map((cat) => (
-                <label key={cat} className="filter-label">
-                  <input 
-                    type="radio" 
-                    name="category" 
-                    checked={selectedCategory === cat} 
-                    onChange={() => setSelectedCategory(cat)} 
-                  />
-                  <span>{cat}</span>
-                </label>
+                <button
+                  key={cat}
+                  className={`filter-pill ${selectedCategory === cat ? 'active' : ''}`}
+                  data-active-cat={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                >
+                  {cat}
+                </button>
               ))}
             </div>
           </div>
