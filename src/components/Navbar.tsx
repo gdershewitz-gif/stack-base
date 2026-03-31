@@ -16,7 +16,6 @@ export const Navbar: React.FC = () => {
           
           <div className="navbar-links">
             <Link to="/browse" className="nav-link">Browse Projects</Link>
-            <Link to="/admin" className="nav-link">Admin</Link>
             <Link to="/submit">
               <Button variant="primary" size="sm">Submit Project</Button>
             </Link>
