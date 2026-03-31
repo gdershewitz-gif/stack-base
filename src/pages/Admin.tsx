@@ -11,6 +11,9 @@ export const Admin: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
+  const [totalProjectsCount, setTotalProjectsCount] = useState<number | string>('-');
+  const [totalUpvotes, setTotalUpvotes] = useState<number | string>('-');
+
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<Partial<Project>>({});
 
@@ -30,6 +33,16 @@ export const Admin: React.FC = () => {
     if (data && !error) {
       setProjects(data.map(mapDbToProject));
     }
+
+    const { count: projCount } = await supabase.from('projects').select('*', { count: 'exact', head: true });
+    if (projCount !== null) setTotalProjectsCount(projCount);
+
+    const { data: upvotesData } = await supabase.from('projects').select('upvotes');
+    if (upvotesData) {
+      const sum = upvotesData.reduce((acc, curr) => acc + (curr.upvotes || 0), 0);
+      setTotalUpvotes(sum);
+    }
+
     setIsLoading(false);
   };
 
@@ -113,6 +126,17 @@ export const Admin: React.FC = () => {
         <button className="refresh-btn" onClick={fetchProjects}>
           {isLoading ? <Loader2 className="animate-spin" size={16} /> : 'Refresh Data'}
         </button>
+      </div>
+
+      <div className="admin-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px', marginBottom: '40px' }}>
+        <div className="stat-card" style={{ padding: '24px', background: 'var(--section-bg)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+          <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Total Submissions</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>{totalProjectsCount}</div>
+        </div>
+        <div className="stat-card" style={{ padding: '24px', background: 'var(--section-bg)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+          <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontWeight: 600, textTransform: 'uppercase', marginBottom: '8px' }}>Total Upvotes</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 800 }}>{totalUpvotes}</div>
+        </div>
       </div>
 
       <div className="table-responsive">

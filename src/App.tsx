@@ -5,6 +5,7 @@ import { Browse } from './pages/Browse';
 import { Submit } from './pages/Submit';
 import { ProjectDetail } from './pages/ProjectDetail';
 import { Admin } from './pages/Admin';
+import { Analytics } from '@vercel/analytics/react';
 import './index.css';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path="/admin" element={<Admin />} />
         </Routes>
       </Layout>
+      <Analytics />
     </Router>
   );
 }
