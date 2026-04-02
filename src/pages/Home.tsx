@@ -69,7 +69,6 @@ export const Home: React.FC = () => {
 
   // Calculate dynamic stats from actual data
   const totalFounders = useMemo(() => new Set(projectsData.map(p => p.founderName)).size, [projectsData]);
-  const totalSchools = useMemo(() => new Set(projectsData.filter(p => p.schoolName).map(p => p.schoolName)).size, [projectsData]);
   const openRoles = useMemo(() => projectsData.reduce((acc, p) => p.recruiting && p.rolesNeeded ? acc + p.rolesNeeded.length : acc, 0), [projectsData]);
 
   return (
@@ -79,10 +78,10 @@ export const Home: React.FC = () => {
         <div className="container hero-container">
           <Badge />
           <h1 className="hero-title">
-            Built by students. <span className="text-primary">For students.</span>
+            The Premier Platform for <span className="text-primary">Young Founders</span>
           </h1>
           <p className="hero-subtitle">
-            The home for student founders to share what they built, inspire the next generation, and find their team.
+            A community for the next generation of founders — share your project, inspire others, and find your team.
           </p>
           <div className="hero-cta-group">
             <Link to="/browse">
@@ -102,11 +101,7 @@ export const Home: React.FC = () => {
             </div>
             <div className="stat-item">
               <div className="stat-value">{isLoading ? '...' : totalFounders}</div>
-              <div className="stat-label">Student Founders</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-value">{isLoading ? '...' : totalSchools}</div>
-              <div className="stat-label">Schools Represented</div>
+              <div className="stat-label">Founders</div>
             </div>
             <div className="stat-item">
               <div className="stat-value">{isLoading ? '...' : openRoles}</div>
