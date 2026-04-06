@@ -76,7 +76,7 @@ export const Submit: React.FC = () => {
         founder_name: formData.founderName,
         school_name: formData.schoolName || null,
         grade_or_age: formData.gradeOrAge,
-        founder_email: formData.founderEmail || null,
+        founder_email: formData.founderEmail || '',
         upvotes: 0,
         status: 'pending'
       }
