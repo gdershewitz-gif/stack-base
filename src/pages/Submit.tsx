@@ -76,7 +76,7 @@ export const Submit: React.FC = () => {
         founder_name: formData.founderName,
         school_name: formData.schoolName || null,
         grade_or_age: formData.gradeOrAge,
-        founder_email: formData.founderEmail,
+        founder_email: formData.founderEmail || null,
         upvotes: 0,
         status: 'pending'
       }
@@ -217,8 +217,8 @@ export const Submit: React.FC = () => {
               <input type="text" id="schoolName" name="schoolName" value={formData.schoolName} onChange={handleChange} disabled={isSubmitting} />
             </div>
             <div className="form-group">
-              <label htmlFor="founderEmail">Contact Email *</label>
-              <input type="email" id="founderEmail" name="founderEmail" required value={formData.founderEmail} onChange={handleChange} disabled={isSubmitting} />
+              <label htmlFor="founderEmail">Contact Email (Optional)</label>
+              <input type="email" id="founderEmail" name="founderEmail" value={formData.founderEmail} onChange={handleChange} disabled={isSubmitting} />
               <p className="text-sm text-muted mt-1">Needed if someone wants to join your team!</p>
             </div>
           </div>

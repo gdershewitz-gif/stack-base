@@ -86,7 +86,7 @@ export const Admin: React.FC = () => {
       founder_name: editForm.founderName,
       school_name: editForm.schoolName || null,
       grade_or_age: editForm.gradeOrAge,
-      founder_email: editForm.founderEmail,
+      founder_email: editForm.founderEmail || null,
       featured: editForm.featured,
       status: editForm.status
     }).eq('id', editingId);
