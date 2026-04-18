@@ -49,3 +49,9 @@
 .nav-link:hover {
   color: var(--primary);
 }
+
+@media (max-width: 768px) {
+  .navbar-links .nav-link {
+    display: none;
+  }
+}

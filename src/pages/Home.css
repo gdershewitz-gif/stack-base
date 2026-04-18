@@ -236,10 +236,16 @@
   .hero-cta-group a {
     width: 100%;
   }
+  .hero-cta-group a + a {
+    margin-top: 16px;
+  }
   .hero-cta-group .btn {
     width: 100%;
     padding: 18px 24px;
     justify-content: center;
+  }
+  .hero-cta-group .btn-outline {
+    border: 2px solid var(--border-color);
   }
   .bottom-cta-box {
     flex-direction: column;
