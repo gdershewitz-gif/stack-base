@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Users } from 'lucide-react';
+import { ArrowRight, Users, Flame } from 'lucide-react';
 import { Button } from '../components/Button';
 import { ProjectCard } from '../components/ProjectCard';
 import type { Category, Project } from '../data/projects';
@@ -115,7 +115,7 @@ export const Home: React.FC = () => {
       {trendingProjects.length > 0 && (
         <section className="trending-section container">
           <div className="trending-header">
-            <h2>🔥 Trending This Week</h2>
+            <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Flame className="text-primary" size={28} /> Trending This Week</h2>
             <p>The highest upvoted projects submitted in the last 7 days.</p>
           </div>
           

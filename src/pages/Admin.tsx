@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Loader2, Check, X, Trash2, Edit2, Save, XCircle } from 'lucide-react';
+import { Loader2, Check, X, Trash2, Edit2, Save, XCircle, Star } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { Project, Category } from '../data/projects';
 import { mapDbToProject } from '../data/projects';
@@ -213,7 +213,7 @@ export const Admin: React.FC = () => {
                     </td>
                     <td className="title-cell">
                       <strong>{project.name}</strong>
-                      {project.featured && <span className="featured-star">★</span>}
+                      {project.featured && <span className="featured-star"><Star size={14} fill="currentColor" style={{ verticalAlign: 'middle', marginTop: '-2px' }} /></span>}
                     </td>
                     <td>{project.category}</td>
                     <td>
