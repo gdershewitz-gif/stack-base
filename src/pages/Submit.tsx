@@ -78,7 +78,7 @@ export const Submit: React.FC = () => {
         grade_or_age: formData.gradeOrAge,
         founder_email: formData.founderEmail || '',
         upvotes: 0,
-        status: 'pending'
+        status: 'approved'
       }
     ]);
 
