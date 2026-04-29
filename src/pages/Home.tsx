@@ -37,23 +37,14 @@ export const Home: React.FC = () => {
         
       if (data && !error) {
         setProjectsData(data.map(mapDbToProject));
+        
+        // Random selection of 5 projects, ordered by upvotes
+        const shuffled = [...data].sort(() => 0.5 - Math.random());
+        const selected = shuffled.slice(0, 5);
+        selected.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+        setTrendingProjects(selected.map(mapDbToProject));
       } else if (error) {
         console.error('Error fetching projects:', error);
-      }
-
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-      
-      const { data: trendingData } = await supabase
-        .from('projects')
-        .select('*')
-        .eq('status', 'approved')
-        .gte('date_added', oneWeekAgo.toISOString())
-        .order('upvotes', { ascending: false })
-        .limit(5);
-        
-      if (trendingData) {
-        setTrendingProjects(trendingData.map(mapDbToProject));
       }
 
       setIsLoading(false);
@@ -116,7 +107,7 @@ export const Home: React.FC = () => {
         <section className="trending-section container">
           <div className="trending-header">
             <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Flame className="text-primary" size={28} /> Trending This Week</h2>
-            <p>The highest upvoted projects submitted in the last 7 days.</p>
+            <p>A fresh, random selection of upvoted projects from the community to discover.</p>
           </div>
           
           <div className="trending-horizontal-scroll">
