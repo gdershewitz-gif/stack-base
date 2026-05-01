@@ -62,7 +62,7 @@ export const Submit: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setErrorMsg('');
-    
+
     const { error } = await supabase.from('projects').insert([
       {
         name: formData.name,
@@ -77,7 +77,8 @@ export const Submit: React.FC = () => {
         school_name: formData.schoolName || null,
         grade_or_age: formData.gradeOrAge,
         founder_email: formData.founderEmail || '',
-        upvotes: 0
+        upvotes: 0,
+        status: 'pending'
       }
     ]);
 
@@ -151,13 +152,13 @@ export const Submit: React.FC = () => {
                 <option value="Other">Other</option>
               </select>
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="demoUrl">Website or Demo Link</label>
               <input type="url" id="demoUrl" name="demoUrl" value={formData.demoUrl} onChange={handleChange} disabled={isSubmitting} placeholder="https://" />
             </div>
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="socialUrl">Instagram or Social Link</label>
             <input type="url" id="socialUrl" name="socialUrl" value={formData.socialUrl} onChange={handleChange} disabled={isSubmitting} placeholder="https://instagram.com/..." />
@@ -181,10 +182,10 @@ export const Submit: React.FC = () => {
               <div className="checkbox-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '8px' }}>
                 {ROLES_AVAILABLE.map(role => (
                   <label key={role} className="checkbox-label">
-                    <input 
-                      type="checkbox" 
-                      checked={formData.rolesNeeded.includes(role)} 
-                      onChange={() => handleRoleToggle(role)} 
+                    <input
+                      type="checkbox"
+                      checked={formData.rolesNeeded.includes(role)}
+                      onChange={() => handleRoleToggle(role)}
                       disabled={isSubmitting}
                     />
                     {role}
@@ -209,7 +210,7 @@ export const Submit: React.FC = () => {
               <input type="text" id="gradeOrAge" name="gradeOrAge" value={formData.gradeOrAge} onChange={handleChange} disabled={isSubmitting} placeholder="e.g. 11th Grade, High School Junior, 16" />
             </div>
           </div>
-          
+
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="schoolName">School Name</label>
