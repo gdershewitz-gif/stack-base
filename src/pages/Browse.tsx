@@ -1,6 +1,7 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, SlidersHorizontal, Loader2, Users } from 'lucide-react';
 import { ProjectCard } from '../components/ProjectCard';
+import { ProjectCardSkeleton } from '../components/ProjectCardSkeleton';
 import type { Category, Project } from '../data/projects';
 import { mapDbToProject } from '../data/projects';
 import { supabase } from '../lib/supabase';
@@ -9,30 +10,79 @@ import './Browse.css';
 export const Browse: React.FC = () => {
   const [projectsData, setProjectsData] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<Category | 'All'>('All');
   const [recruitingOnly, setRecruitingOnly] = useState(false);
   const [activeTab, setActiveTab] = useState<'upvotes' | 'newest' | 'recruiting'>('upvotes');
+  
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    setPage(0);
+  }, [searchQuery, selectedCategory, recruitingOnly, activeTab]);
 
   useEffect(() => {
     const fetchProjects = async () => {
-      setIsLoading(true);
-      const { data, error } = await supabase
+      if (page === 0) setIsLoading(true);
+      else setIsLoadingMore(true);
+      
+      let query = supabase
         .from('projects')
-        .select('*')
-        .eq('status', 'approved')
-        .order('date_added', { ascending: false });
+        .select('id, name, short_description, category, demo_url, social_url, recruiting, roles_needed, founder_name, school_name, grade_or_age, upvotes, featured, status, date_added, cover_image_url')
+        .eq('status', 'approved');
+
+      if (selectedCategory !== 'All') {
+        query = query.eq('category', selectedCategory);
+      }
+      
+      if (recruitingOnly || activeTab === 'recruiting') {
+        query = query.eq('recruiting', true);
+      }
+
+      if (searchQuery) {
+        query = query.or(`name.ilike.%${searchQuery}%,short_description.ilike.%${searchQuery}%,founder_name.ilike.%${searchQuery}%`);
+      }
+
+      if (activeTab === 'newest') {
+        query = query.order('date_added', { ascending: false });
+      } else if (activeTab === 'recruiting') {
+        query = query.order('date_added', { ascending: false });
+      } else {
+        query = query.order('upvotes', { ascending: false });
+      }
+
+      query = query.order('id', { ascending: false }); // stable pagination
+
+      const from = page * 12;
+      const to = from + 11;
+      query = query.range(from, to);
+
+      const { data, error } = await query;
         
       if (data && !error) {
-        setProjectsData(data.map(mapDbToProject));
+        const mapped = data.map(mapDbToProject);
+        if (page === 0) {
+          setProjectsData(mapped);
+        } else {
+          setProjectsData(prev => [...prev, ...mapped]);
+        }
+        setHasMore(data.length === 12);
       } else if (error) {
         console.error('Error fetching projects:', error);
       }
+      
       setIsLoading(false);
+      setIsLoadingMore(false);
     };
     
-    fetchProjects();
-  }, []);
+    const timeoutId = setTimeout(() => {
+      fetchProjects();
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, selectedCategory, recruitingOnly, activeTab, page]);
 
   const categories: (Category | 'All')[] = [
     'All', 
@@ -44,34 +94,6 @@ export const Browse: React.FC = () => {
     'Side Hustle', 
     'Other'
   ];
-
-  const processedProjects = useMemo(() => {
-    let result = projectsData.filter((proj) => {
-      const query = searchQuery.toLowerCase();
-      const matchesSearch = 
-        proj.name.toLowerCase().includes(query) || 
-        proj.shortDescription.toLowerCase().includes(query) ||
-        (proj.longDescription && proj.longDescription.toLowerCase().includes(query)) ||
-        proj.category.toLowerCase().includes(query) ||
-        proj.founderName.toLowerCase().includes(query);
-        
-      const matchesCategory = selectedCategory === 'All' || proj.category === selectedCategory;
-      const matchesRecruiting = !recruitingOnly || proj.recruiting;
-      
-      return matchesSearch && matchesCategory && matchesRecruiting;
-    });
-
-    if (activeTab === 'recruiting') {
-      result = result.filter(p => p.recruiting);
-      result.sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime());
-    } else if (activeTab === 'newest') {
-      result.sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime());
-    } else {
-      result.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
-    }
-
-    return result;
-  }, [projectsData, searchQuery, selectedCategory, recruitingOnly, activeTab]);
 
   return (
     <div className="browse-page container">
@@ -92,7 +114,6 @@ export const Browse: React.FC = () => {
       </div>
 
       <div className="browse-layout">
-        {/* Sidebar Filters */}
         <aside className="filters-sidebar">
           <div className="filters-header">
             <h3><SlidersHorizontal size={18} /> Filters</h3>
@@ -140,37 +161,61 @@ export const Browse: React.FC = () => {
           </button>
         </aside>
 
-        {/* Results Area */}
         <div className="browse-results">
-          {isLoading ? (
-            <div className="no-results" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', border: 'none', background: 'transparent' }}>
-              <Loader2 className="animate-spin" size={32} color="var(--primary)" />
-              <p>Loading projects database...</p>
+          <div className="results-header">
+            <span>
+              {isLoading && page === 0 ? 'Searching...' : `Showing results`}
+            </span>
+            <div className="sort-toggle">
+              <button className={`sort-tab ${activeTab === 'upvotes' ? 'active' : ''}`} onClick={() => setActiveTab('upvotes')}>Most Upvoted</button>
+              <button className={`sort-tab ${activeTab === 'newest' ? 'active' : ''}`} onClick={() => setActiveTab('newest')}>Newest</button>
+              <button className={`sort-tab ${activeTab === 'recruiting' ? 'active' : ''}`} onClick={() => setActiveTab('recruiting')}>Recruiting Now</button>
             </div>
-          ) : (
-            <>
-              <div className="results-header">
-                <span>Showing {processedProjects.length} project{processedProjects.length !== 1 ? 's' : ''}</span>
-                <div className="sort-toggle">
-                  <button className={`sort-tab ${activeTab === 'upvotes' ? 'active' : ''}`} onClick={() => setActiveTab('upvotes')}>Most Upvoted</button>
-                  <button className={`sort-tab ${activeTab === 'newest' ? 'active' : ''}`} onClick={() => setActiveTab('newest')}>Newest</button>
-                  <button className={`sort-tab ${activeTab === 'recruiting' ? 'active' : ''}`} onClick={() => setActiveTab('recruiting')}>Recruiting Now</button>
-                </div>
-              </div>
+          </div>
 
-              {processedProjects.length > 0 ? (
-                <div className="tools-grid">
-                  {processedProjects.map(proj => (
-                    <ProjectCard key={proj.id} project={proj} />
-                  ))}
-                </div>
-              ) : (
-                <div className="no-results">
-                  <h3>No projects found</h3>
-                  <p>Try adjusting your search or filters.</p>
+          {isLoading && page === 0 ? (
+            <div className="tools-grid">
+              {[...Array(6)].map((_, i) => (
+                <ProjectCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : projectsData.length > 0 ? (
+            <>
+              <div className="tools-grid">
+                {projectsData.map(proj => (
+                  <ProjectCard key={proj.id} project={proj} />
+                ))}
+              </div>
+              
+              {hasMore && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
+                  <button 
+                    className="load-more-btn" 
+                    onClick={() => setPage(p => p + 1)}
+                    disabled={isLoadingMore}
+                    style={{
+                      padding: '12px 24px',
+                      borderRadius: '8px',
+                      backgroundColor: 'transparent',
+                      border: '2px solid var(--border-color)',
+                      fontWeight: 600,
+                      cursor: isLoadingMore ? 'not-allowed' : 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    {isLoadingMore ? <Loader2 className="animate-spin" size={18} /> : null}
+                    {isLoadingMore ? 'Loading...' : 'Load More Projects'}
+                  </button>
                 </div>
               )}
             </>
+          ) : (
+            <div className="no-results">
+              <h3>No projects found</h3>
+              <p>Try adjusting your search or filters.</p>
+            </div>
           )}
         </div>
       </div>

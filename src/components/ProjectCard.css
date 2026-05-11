@@ -17,11 +17,7 @@
   border-color: var(--primary-light, #a7f3d0);
 }
 
-.project-card-v2.featured::before {
-  content: 'Featured';
-  position: absolute;
-  top: -12px;
-  right: 32px;
+.pc2-featured-badge {
   background-color: var(--primary);
   color: white;
   font-size: 0.75rem;
@@ -30,7 +26,7 @@
   border-radius: 9999px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  box-shadow: 0 4px 6px -1px rgba(29, 158, 117, 0.2);
+  white-space: nowrap;
 }
 
 .pc2-thumbnail-container {

@@ -108,6 +108,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                 src={project.coverImageUrl} 
                 alt={`${project.name} logo`} 
                 className="pc2-thumbnail-image" 
+                loading="lazy"
                 onError={() => setImageError(true)}
               />
             ) : (
@@ -118,7 +119,13 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           </div>
           <h3 className="pc2-title">{project.name}</h3>
         </div>
-        <span className="pc2-cat-badge" data-category={project.category}>
+      </div>
+
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '16px' }}>
+        {project.featured && (
+          <span className="pc2-featured-badge">Featured</span>
+        )}
+        <span className="pc2-cat-badge" data-category={project.category} style={{ margin: 0 }}>
           {project.category}
         </span>
       </div>
