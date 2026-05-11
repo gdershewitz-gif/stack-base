@@ -22,6 +22,7 @@ export const ProjectDetail: React.FC = () => {
   const [newCommentName, setNewCommentName] = useState('');
   const [newCommentText, setNewCommentText] = useState('');
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -169,8 +170,13 @@ export const ProjectDetail: React.FC = () => {
         {/* Main Content */}
         <div className="project-main">
           <div className="project-hero-cover-container">
-            {project.coverImageUrl ? (
-              <img src={project.coverImageUrl} alt={`${project.name} cover`} className="project-hero-cover-image" />
+            {project.coverImageUrl && !imageError ? (
+              <img 
+                src={project.coverImageUrl} 
+                alt={`${project.name} cover`} 
+                className="project-hero-cover-image" 
+                onError={() => setImageError(true)}
+              />
             ) : (
               <div className="project-hero-cover-placeholder" data-category={project.category}>
                 {project.name.charAt(0).toUpperCase()}

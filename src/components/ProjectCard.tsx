@@ -14,6 +14,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const [upvotes, setUpvotes] = useState(project.upvotes || 0);
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [isBouncing, setIsBouncing] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const list = JSON.parse(localStorage.getItem('stagone_upvotes') || '[]');
@@ -102,8 +103,13 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       <div className="pc2-header">
         <div className="pc2-title-group">
           <div className="pc2-thumbnail-container">
-            {project.coverImageUrl ? (
-              <img src={project.coverImageUrl} alt={`${project.name} logo`} className="pc2-thumbnail-image" />
+            {project.coverImageUrl && !imageError ? (
+              <img 
+                src={project.coverImageUrl} 
+                alt={`${project.name} logo`} 
+                className="pc2-thumbnail-image" 
+                onError={() => setImageError(true)}
+              />
             ) : (
               <div className="pc2-thumbnail-placeholder" data-category={project.category}>
                 {project.name.charAt(0).toUpperCase()}
