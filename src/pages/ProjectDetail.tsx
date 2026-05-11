@@ -168,10 +168,17 @@ export const ProjectDetail: React.FC = () => {
       <div className="project-content-grid">
         {/* Main Content */}
         <div className="project-main">
+          <div className="project-hero-cover-container">
+            {project.coverImageUrl ? (
+              <img src={project.coverImageUrl} alt={`${project.name} cover`} className="project-hero-cover-image" />
+            ) : (
+              <div className="project-hero-cover-placeholder" data-category={project.category}>
+                {project.name.charAt(0).toUpperCase()}
+              </div>
+            )}
+          </div>
+
           <div className="project-hero-header">
-            <div className="project-hero-icon" style={{ backgroundColor: `hsl(${project.name.charCodeAt(0) * 15 % 360}, 60%, 80%)`, color: '#1f2937' }}>
-              {project.name.charAt(0).toUpperCase()}
-            </div>
             <div className="project-hero-info">
               <h1>{project.name}</h1>
               <div className="project-meta-tags">

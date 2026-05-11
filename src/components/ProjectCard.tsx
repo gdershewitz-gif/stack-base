@@ -100,7 +100,18 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       onClick={() => navigate(`/project/${project.id}`)}
     >
       <div className="pc2-header">
-        <h3 className="pc2-title">{project.name}</h3>
+        <div className="pc2-title-group">
+          <div className="pc2-thumbnail-container">
+            {project.coverImageUrl ? (
+              <img src={project.coverImageUrl} alt={`${project.name} logo`} className="pc2-thumbnail-image" />
+            ) : (
+              <div className="pc2-thumbnail-placeholder" data-category={project.category}>
+                {project.name.charAt(0).toUpperCase()}
+              </div>
+            )}
+          </div>
+          <h3 className="pc2-title">{project.name}</h3>
+        </div>
         <span className="pc2-cat-badge" data-category={project.category}>
           {project.category}
         </span>

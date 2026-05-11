@@ -88,7 +88,8 @@ export const Admin: React.FC = () => {
       grade_or_age: editForm.gradeOrAge,
       founder_email: editForm.founderEmail || '',
       featured: editForm.featured,
-      status: editForm.status
+      status: editForm.status,
+      cover_image_url: editForm.coverImageUrl || null
     }).eq('id', editingId);
 
     if (!error) {
@@ -174,6 +175,7 @@ export const Admin: React.FC = () => {
 
                       <input type="text" placeholder="Demo URL" value={editForm.demoUrl || ''} onChange={e => setEditForm({...editForm, demoUrl: e.target.value})} />
                       <input type="text" placeholder="Social URL" value={editForm.socialUrl || ''} onChange={e => setEditForm({...editForm, socialUrl: e.target.value})} />
+                      <input type="text" placeholder="Cover Image URL" value={editForm.coverImageUrl || ''} onChange={e => setEditForm({...editForm, coverImageUrl: e.target.value})} />
                       
                       <div className="edit-checkbox">
                         <label>

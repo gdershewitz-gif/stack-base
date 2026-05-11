@@ -33,11 +33,45 @@
   box-shadow: 0 4px 6px -1px rgba(29, 158, 117, 0.2);
 }
 
+.pc2-thumbnail-container {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color);
+  background-color: var(--section-bg);
+}
+
+.pc2-thumbnail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pc2-thumbnail-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+}
+
 .pc2-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.pc2-title-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .pc2-title {

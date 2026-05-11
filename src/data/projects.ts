@@ -25,6 +25,7 @@ export interface Project {
   featured: boolean;
   status: string;
   dateAdded: string;
+  coverImageUrl?: string;
 }
 
 export interface Comment {
@@ -52,7 +53,8 @@ export const mapDbToProject = (dbProj: any): Project => ({
   upvotes: dbProj.upvotes,
   featured: dbProj.featured,
   status: dbProj.status,
-  dateAdded: dbProj.date_added
+  dateAdded: dbProj.date_added,
+  coverImageUrl: dbProj.cover_image_url
 });
 
 export const ROLES_AVAILABLE = [
