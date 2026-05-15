@@ -13,16 +13,15 @@ export const ProjectDetail: React.FC = () => {
   const [project, setProject] = useState<Project | null>(null);
   const [relatedProjects, setRelatedProjects] = useState<Project[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
-  
+
   const [isLoading, setIsLoading] = useState(true);
   const [upvotes, setUpvotes] = useState(0);
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [isBouncing, setIsBouncing] = useState(false);
-  
+
   const [newCommentName, setNewCommentName] = useState('');
   const [newCommentText, setNewCommentText] = useState('');
-  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false)
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -87,7 +86,7 @@ export const ProjectDetail: React.FC = () => {
 
   const handleUpvoteToggle = async () => {
     if (!project) return;
-    
+
     setIsBouncing(true);
     setTimeout(() => setIsBouncing(false), 300);
 
@@ -189,14 +188,14 @@ export const ProjectDetail: React.FC = () => {
 
           {/* Comments Section */}
           <div className="comments-section mt-12">
-            <h2><MessageSquare size={20} className="inline mr-2 text-primary" style={{ display:'inline', marginRight:'8px' }}/> Feedback & Encouragement</h2>
-            
+            <h2><MessageSquare size={20} className="inline mr-2 text-primary" style={{ display: 'inline', marginRight: '8px' }} /> Feedback & Encouragement</h2>
+
             <form className="comment-form" onSubmit={handlePostComment}>
               <div className="form-group row-flex">
-                <input type="text" placeholder="Your Name" required value={newCommentName} onChange={e=>setNewCommentName(e.target.value)} className="comment-input half-width" disabled={isSubmittingComment} />
+                <input type="text" placeholder="Your Name" required value={newCommentName} onChange={e => setNewCommentName(e.target.value)} className="comment-input half-width" disabled={isSubmittingComment} />
               </div>
               <div className="form-group mt-2">
-                <textarea placeholder="Leave a supportive comment, feedback, or ask a question!" required rows={3} value={newCommentText} onChange={e=>setNewCommentText(e.target.value)} className="comment-input" disabled={isSubmittingComment} />
+                <textarea placeholder="Leave a supportive comment, feedback, or ask a question!" required rows={3} value={newCommentText} onChange={e => setNewCommentText(e.target.value)} className="comment-input" disabled={isSubmittingComment} />
               </div>
               <Button type="submit" size="sm" className="mt-2" disabled={isSubmittingComment}>
                 {isSubmittingComment ? 'Posting...' : 'Post Comment'}
@@ -223,8 +222,8 @@ export const ProjectDetail: React.FC = () => {
         <div className="project-sidebar">
           <div className="action-card">
             <h3>{project.shortDescription}</h3>
-            
-            <button 
+
+            <button
               className={`upvote-btn-massive mt-4 ${hasUpvoted ? 'upvoted' : ''} ${isBouncing ? 'bounce' : ''}`}
               onClick={handleUpvoteToggle}
             >
@@ -252,7 +251,7 @@ export const ProjectDetail: React.FC = () => {
                     <Users size={18} /> Actively Recruiting
                   </div>
                   <p className="mt-2 text-sm text-center">
-                    {project.founderName} is looking for: <br/> <strong>{project.rolesNeeded.join(', ')}</strong>
+                    {project.founderName} is looking for: <br /> <strong>{project.rolesNeeded.join(', ')}</strong>
                   </p>
                   <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
                     <a href={`mailto:${project.founderEmail}?subject=Interested in joining the ${project.name} team!`} className="flex-1 block" style={{ flex: 1 }}>
