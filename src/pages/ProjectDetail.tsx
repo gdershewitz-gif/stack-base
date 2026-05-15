@@ -169,21 +169,6 @@ export const ProjectDetail: React.FC = () => {
       <div className="project-content-grid">
         {/* Main Content */}
         <div className="project-main">
-          <div className="project-hero-cover-container">
-            {project.coverImageUrl && !imageError ? (
-              <img 
-                src={project.coverImageUrl} 
-                alt={`${project.name} cover`} 
-                className="project-hero-cover-image" 
-                onError={() => setImageError(true)}
-              />
-            ) : (
-              <div className="project-hero-cover-placeholder" data-category={project.category}>
-                {project.name.charAt(0).toUpperCase()}
-              </div>
-            )}
-          </div>
-
           <div className="project-hero-header">
             <div className="project-hero-info">
               <h1>{project.name}</h1>
