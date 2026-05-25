@@ -105,7 +105,7 @@ export const Admin: React.FC = () => {
     return (
       <div className="admin-login-container">
         <form className="admin-login-form" onSubmit={handleLogin}>
-          <h2>StageOne Admin</h2>
+          <h2>FoundrBoard Admin</h2>
           <input 
             type="password" 
             placeholder="Enter Admin Password" 

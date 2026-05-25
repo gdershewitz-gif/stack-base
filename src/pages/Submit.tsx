@@ -98,7 +98,7 @@ export const Submit: React.FC = () => {
         <div className="success-container">
           <CheckCircle size={64} className="success-icon" />
           <h2>Thanks for submitting!</h2>
-          <p>Your project has been submitted to StageOne. It will appear on the browse page once an admin approves it.</p>
+          <p>Your project has been submitted to FoundrBoard. It will appear on the browse page once an admin approves it.</p>
           <Button variant="outline" onClick={() => {
             setIsSubmitted(false);
             setFormData(prev => ({ ...prev, name: '', shortDescription: '', longDescription: '', demoUrl: '' }));

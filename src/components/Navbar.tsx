@@ -11,7 +11,7 @@ export const Navbar: React.FC = () => {
         <nav className="navbar">
           <Link to="/" className="navbar-logo">
             <Layers className="logo-icon text-primary" size={28} />
-            <span className="logo-text">StageOne</span>
+            <span className="logo-text">FoundrBoard</span>
           </Link>
           
           <div className="navbar-links">
