@@ -5,10 +5,6 @@ import type { Project } from '../data/projects';
 import { supabase } from '../lib/supabase';
 import './ProjectCard.css';
 
-interface ProjectCardProps {
-  project: Project;
-}
-
 export const ProjectCard: React.FC<{ project: Project }> = React.memo(({ project }) => {
   const navigate = useNavigate();
   const [upvotes, setUpvotes] = useState(project.upvotes || 0);
