@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Users, Flame } from 'lucide-react';
 import { Button } from '../components/Button';
 import { ProjectCard } from '../components/ProjectCard';
+import { ProjectCardSkeleton } from '../components/ProjectCardSkeleton';
 import type { Category, Project } from '../data/projects';
 import { mapDbToProject } from '../data/projects';
 import { supabase } from '../lib/supabase';
+import { getCache, setCache } from '../lib/cache';
 import './Home.css';
 
 const CATEGORIES: { label: string; value: Category | 'All' }[] = [
@@ -22,27 +24,37 @@ const CATEGORIES: { label: string; value: Category | 'All' }[] = [
 export const Home: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All');
   const [projectsData, setProjectsData] = useState<Project[]>([]);
-  const [trendingProjects, setTrendingProjects] = useState<Project[]>([]);
+  const [hiringProjects, setHiringProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProjects = async () => {
+      const cached = getCache<Project[]>('home_projects');
+      if (cached) {
+        setProjectsData(cached);
+        const hiring = cached.filter(p => p.recruiting).sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+        setHiringProjects(hiring);
+        setIsLoading(false);
+        return;
+      }
+
       setIsLoading(true);
       const { data, error } = await supabase
         .from('projects')
-        .select('*')
+        .select('id, name, short_description, category, demo_url, social_url, recruiting, roles_needed, founder_name, school_name, grade_or_age, upvotes, featured, status, date_added, cover_image_url')
         .eq('status', 'approved')
         .order('upvotes', { ascending: false })
         .order('date_added', { ascending: false });
         
       if (data && !error) {
-        setProjectsData(data.map(mapDbToProject));
+        const mappedData = data.map(mapDbToProject);
+        setProjectsData(mappedData);
         
-        // Random selection of 5 projects, ordered by upvotes
-        const shuffled = [...data].sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, 5);
-        selected.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
-        setTrendingProjects(selected.map(mapDbToProject));
+        // Projects that are hiring, sorted by upvotes descending
+        const hiring = mappedData.filter(p => p.recruiting).sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+        setHiringProjects(hiring);
+        
+        setCache('home_projects', mappedData);
       } else if (error) {
         console.error('Error fetching projects:', error);
       }
@@ -102,16 +114,16 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Trending Section */}
-      {trendingProjects.length > 0 && (
+      {/* Hiring Section */}
+      {hiringProjects.length > 0 && (
         <section className="trending-section container">
           <div className="trending-header">
-            <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Flame className="text-primary" size={28} /> Trending This Week</h2>
-            <p>A fresh, random selection of upvoted projects from the community to discover.</p>
+            <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Users className="text-primary" size={28} /> Projects Hiring Now</h2>
+            <p>Discover student projects that are actively recruiting and looking for teammates.</p>
           </div>
           
           <div className="trending-horizontal-scroll">
-            {trendingProjects.map(proj => (
+            {hiringProjects.map(proj => (
               <div key={proj.id} className="trending-card-wrapper">
                 <ProjectCard project={proj} />
               </div>
@@ -141,8 +153,10 @@ export const Home: React.FC = () => {
         </div>
 
         {isLoading ? (
-          <div className="empty-state">
-            <p>Loading projects...</p>
+          <div className="tools-grid">
+            {[...Array(6)].map((_, i) => (
+              <ProjectCardSkeleton key={i} />
+            ))}
           </div>
         ) : filteredProjects.length > 0 ? (
           <div className="tools-grid">

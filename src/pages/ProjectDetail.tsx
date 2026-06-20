@@ -45,25 +45,28 @@ export const ProjectDetail: React.FC = () => {
           setHasUpvoted(true);
         }
 
-        // Fetch related projects
-        const { data: relatedData } = await supabase
-          .from('projects')
-          .select('*')
-          .eq('category', fetchedProject.category)
-          .eq('status', 'approved')
-          .neq('id', id)
-          .limit(3);
+        // Fetch related projects and comments in parallel
+        const [
+          { data: relatedData },
+          { data: commentsData }
+        ] = await Promise.all([
+          supabase
+            .from('projects')
+            .select('id, name, short_description, category, demo_url, social_url, recruiting, roles_needed, founder_name, school_name, grade_or_age, upvotes, featured, status, date_added, cover_image_url')
+            .eq('category', fetchedProject.category)
+            .eq('status', 'approved')
+            .neq('id', id)
+            .limit(3),
+          supabase
+            .from('comments')
+            .select('*')
+            .eq('project_id', id)
+            .order('date_added', { ascending: false })
+        ]);
 
         if (relatedData) {
           setRelatedProjects(relatedData.map(mapDbToProject));
         }
-
-        // Fetch comments
-        const { data: commentsData } = await supabase
-          .from('comments')
-          .select('*')
-          .eq('project_id', id)
-          .order('date_added', { ascending: false });
 
         if (commentsData) {
           setComments(commentsData.map(c => ({

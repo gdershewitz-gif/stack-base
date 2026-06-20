@@ -9,7 +9,7 @@ interface ProjectCardProps {
   project: Project;
 }
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
+export const ProjectCard: React.FC<{ project: Project }> = React.memo(({ project }) => {
   const navigate = useNavigate();
   const [upvotes, setUpvotes] = useState(project.upvotes || 0);
   const [hasUpvoted, setHasUpvoted] = useState(false);
@@ -205,4 +205,4 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       </div>
     </div>
   );
-};
+});
