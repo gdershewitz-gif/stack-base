@@ -58,6 +58,16 @@ export const Submit: React.FC = () => {
     });
   };
 
+  const normalizeSocialUrl = (input: string) => {
+    if (!input) return null;
+    const trimmed = input.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
+    if (trimmed.includes('.com/') || trimmed.includes('.co/')) return `https://${trimmed}`;
+    
+    const username = trimmed.startsWith('@') ? trimmed.substring(1) : trimmed;
+    return `https://instagram.com/${username}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -70,7 +80,7 @@ export const Submit: React.FC = () => {
         long_description: formData.longDescription,
         category: formData.category,
         demo_url: formData.demoUrl || null,
-        social_url: formData.socialUrl || null,
+        social_url: normalizeSocialUrl(formData.socialUrl),
         recruiting: formData.recruiting,
         roles_needed: formData.recruiting ? formData.rolesNeeded : [],
         founder_name: formData.founderName,
@@ -126,42 +136,40 @@ export const Submit: React.FC = () => {
           <h3>1. Project Details</h3>
           <div className="form-group">
             <label htmlFor="name">Project Name *</label>
-            <input type="text" id="name" name="name" required value={formData.name} onChange={handleChange} disabled={isSubmitting} />
+            <input type="text" id="name" name="name" required value={formData.name} onChange={handleChange} disabled={isSubmitting} placeholder="What is your project called?" />
           </div>
 
           <div className="form-group">
-            <label htmlFor="shortDescription">One-Line Description (100 chars max) *</label>
-            <input type="text" id="shortDescription" name="shortDescription" required maxLength={100} value={formData.shortDescription} onChange={handleChange} disabled={isSubmitting} />
+            <label htmlFor="category">Category *</label>
+            <select id="category" name="category" required value={formData.category} onChange={handleChange} disabled={isSubmitting}>
+              <option value="App or Website">App or Website</option>
+              <option value="Business or Brand">Business or Brand</option>
+              <option value="Nonprofit">Nonprofit</option>
+              <option value="Product or Ecommerce">Product or Ecommerce</option>
+              <option value="Newsletter or Blog">Newsletter or Blog</option>
+              <option value="Side Hustle">Side Hustle</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="shortDescription">One-Line Description (Optional)</label>
+            <input type="text" id="shortDescription" name="shortDescription" maxLength={100} value={formData.shortDescription} onChange={handleChange} disabled={isSubmitting} placeholder="A short, catchy summary of your project." />
           </div>
 
           <div className="form-group">
-            <label htmlFor="longDescription">Full Description *</label>
-            <textarea id="longDescription" name="longDescription" required rows={5} value={formData.longDescription} onChange={handleChange} disabled={isSubmitting} placeholder="What did you build? Why did you build it? What stage are you at?" />
+            <label htmlFor="longDescription">Full Description (Optional)</label>
+            <textarea id="longDescription" name="longDescription" rows={5} value={formData.longDescription} onChange={handleChange} disabled={isSubmitting} placeholder="What did you build? Why did you build it? What stage are you at?" />
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="category">Category *</label>
-              <select id="category" name="category" required value={formData.category} onChange={handleChange} disabled={isSubmitting}>
-                <option value="App or Website">App or Website</option>
-                <option value="Business or Brand">Business or Brand</option>
-                <option value="Nonprofit">Nonprofit</option>
-                <option value="Product or Ecommerce">Product or Ecommerce</option>
-                <option value="Newsletter or Blog">Newsletter or Blog</option>
-                <option value="Side Hustle">Side Hustle</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="demoUrl">Website or Demo Link</label>
+              <label htmlFor="demoUrl">Website or Demo Link (Optional)</label>
               <input type="url" id="demoUrl" name="demoUrl" value={formData.demoUrl} onChange={handleChange} disabled={isSubmitting} placeholder="https://" />
             </div>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="socialUrl">Instagram or Social Link</label>
-            <input type="url" id="socialUrl" name="socialUrl" value={formData.socialUrl} onChange={handleChange} disabled={isSubmitting} placeholder="https://instagram.com/..." />
+            <div className="form-group">
+              <label htmlFor="socialUrl">Instagram or Social Link (Optional)</label>
+              <input type="text" id="socialUrl" name="socialUrl" value={formData.socialUrl} onChange={handleChange} disabled={isSubmitting} placeholder="@username or URL" />
+            </div>
           </div>
         </section>
 
@@ -172,13 +180,13 @@ export const Submit: React.FC = () => {
           <div className="form-group">
             <label className="checkbox-label" style={{ fontWeight: 600 }}>
               <input type="checkbox" name="recruiting" checked={formData.recruiting} onChange={handleChange} disabled={isSubmitting} />
-              Are you currently looking for team members?
+              Are you currently looking for team members? (Optional)
             </label>
           </div>
 
           {formData.recruiting && (
             <div className="form-group role-selection">
-              <label>What roles do you need? *</label>
+              <label>What roles do you need?</label>
               <div className="checkbox-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '8px' }}>
                 {ROLES_AVAILABLE.map(role => (
                   <label key={role} className="checkbox-label">
@@ -202,8 +210,8 @@ export const Submit: React.FC = () => {
           <h3>3. Founder Details</h3>
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="founderName">Your Name *</label>
-              <input type="text" id="founderName" name="founderName" required value={formData.founderName} onChange={handleChange} disabled={isSubmitting} />
+              <label htmlFor="founderName">Your Name (Optional)</label>
+              <input type="text" id="founderName" name="founderName" value={formData.founderName} onChange={handleChange} disabled={isSubmitting} />
             </div>
             <div className="form-group">
               <label htmlFor="gradeOrAge">Grade or Age (Optional)</label>
@@ -213,7 +221,7 @@ export const Submit: React.FC = () => {
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="schoolName">School Name</label>
+              <label htmlFor="schoolName">School Name (Optional)</label>
               <input type="text" id="schoolName" name="schoolName" value={formData.schoolName} onChange={handleChange} disabled={isSubmitting} />
             </div>
             <div className="form-group">
