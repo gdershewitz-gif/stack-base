@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, SlidersHorizontal, Loader2, Users } from 'lucide-react';
 import { ProjectCard } from '../components/ProjectCard';
 import { ProjectCardSkeleton } from '../components/ProjectCardSkeleton';
+import { SEO } from '../components/SEO';
 import type { Category, Project } from '../data/projects';
 import { mapDbToProject } from '../data/projects';
 import { supabase } from '../lib/supabase';
@@ -97,6 +98,11 @@ export const Browse: React.FC = () => {
 
   return (
     <div className="browse-page container">
+      <SEO
+        title="Browse Student Projects | FoundrBoard"
+        description="Explore startups, apps, and businesses built by student founders. Filter by category, search by name, and discover projects that are actively recruiting."
+        canonicalUrl="https://foundrboard.com/browse"
+      />
       <div className="browse-header">
         <h1>Browse Student Projects</h1>
         <p>Discover startups, apps, and businesses built by students across the country.</p>

@@ -4,6 +4,7 @@ import { ArrowRight, Users } from 'lucide-react';
 import { Button } from '../components/Button';
 import { ProjectCard } from '../components/ProjectCard';
 import { ProjectCardSkeleton } from '../components/ProjectCardSkeleton';
+import { SEO } from '../components/SEO';
 import type { Category, Project } from '../data/projects';
 import { mapDbToProject } from '../data/projects';
 import { supabase } from '../lib/supabase';
@@ -71,11 +72,16 @@ export const Home: React.FC = () => {
   });
 
   // Calculate dynamic stats from actual data
-  const totalFounders = useMemo(() => new Set(projectsData.map(p => p.founderName)).size, [projectsData]);
+  const startupsHiring = useMemo(() => projectsData.filter(p => p.recruiting).length, [projectsData]);
   const openRoles = useMemo(() => projectsData.reduce((acc, p) => p.recruiting && p.rolesNeeded ? acc + p.rolesNeeded.length : acc, 0), [projectsData]);
 
   return (
     <div className="home-page">
+      <SEO
+        title="FoundrBoard – Discover Student Startups, Founders & Open Startup Roles"
+        description="FoundrBoard is the premier platform for student founders to showcase what they're building, recruit talented teammates, and discover other student startups."
+        canonicalUrl="https://foundrboard.com/"
+      />
       {/* Hero Section */}
       <section className="hero-section">
         <div className="container hero-container">
@@ -100,11 +106,11 @@ export const Home: React.FC = () => {
           <div className="hero-stats">
             <div className="stat-item">
               <div className="stat-value">{isLoading ? '...' : projectsData.length}</div>
-              <div className="stat-label">Projects Listed</div>
+              <div className="stat-label">Founders</div>
             </div>
             <div className="stat-item">
-              <div className="stat-value">{isLoading ? '...' : totalFounders}</div>
-              <div className="stat-label">Founders</div>
+              <div className="stat-value">{isLoading ? '...' : startupsHiring}</div>
+              <div className="stat-label">Projects Recruiting</div>
             </div>
             <div className="stat-item">
               <div className="stat-value">{isLoading ? '...' : openRoles}</div>

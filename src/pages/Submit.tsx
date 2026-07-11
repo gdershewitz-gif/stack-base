@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '../components/Button';
+import { SEO } from '../components/SEO';
 import { supabase } from '../lib/supabase';
 import { ROLES_AVAILABLE } from '../data/projects';
 import type { Category } from '../data/projects';
@@ -120,6 +121,11 @@ export const Submit: React.FC = () => {
 
   return (
     <div className="submit-page container">
+      <SEO
+        title="Submit Your Project | FoundrBoard"
+        description="Share your startup, app, or side project with the largest community of student founders. Get discovered, find teammates, and grow your project."
+        canonicalUrl="https://foundrboard.com/submit"
+      />
       <div className="submit-header">
         <h1>Submit Your Project</h1>
         <p>Share what you're building with the largest community of student founders.</p>

@@ -6,6 +6,7 @@ import type { Project, Comment } from '../data/projects';
 import { mapDbToProject } from '../data/projects';
 import { Button } from '../components/Button';
 import { ProjectCard } from '../components/ProjectCard';
+import { SEO } from '../components/SEO';
 import './ProjectDetail.css';
 
 export const ProjectDetail: React.FC = () => {
@@ -167,6 +168,14 @@ export const ProjectDetail: React.FC = () => {
       <Link to="/browse" className="back-link">
         <ArrowLeft size={16} /> Back to all projects
       </Link>
+
+      <SEO
+        title={`${project.name} | FoundrBoard`}
+        description={project.shortDescription || `${project.name} — a ${project.category} project on FoundrBoard by ${project.founderName}.`}
+        canonicalUrl={`https://foundrboard.com/project/${project.id}`}
+        type="article"
+        imageUrl={project.coverImageUrl || 'https://foundrboard.com/favicon.svg'}
+      />
 
       <div className="project-content-grid">
         {/* Main Content */}
