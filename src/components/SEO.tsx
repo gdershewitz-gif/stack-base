@@ -14,7 +14,7 @@ export const SEO: React.FC<SEOProps> = ({
   description, 
   canonicalUrl, 
   type = 'website',
-  imageUrl = 'https://foundrboard.com/favicon.svg'
+  imageUrl = 'https://foundrboard.com/og-image.png'
 }) => {
   return (
     <Helmet>
