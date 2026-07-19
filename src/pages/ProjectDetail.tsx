@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ExternalLink, ArrowLeft, Users, ChevronUp, MessageSquare, Loader2, Instagram } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { Project, Comment } from '../data/projects';
-import { mapDbToProject } from '../data/projects';
+import { mapDbToProject, getMappedCategory } from '../data/projects';
 import { Button } from '../components/Button';
 import { ProjectCard } from '../components/ProjectCard';
 import { SEO } from '../components/SEO';
@@ -183,12 +183,18 @@ export const ProjectDetail: React.FC = () => {
           <div className="project-hero-header">
             <div className="project-hero-info">
               <h1>{project.name}</h1>
-              <div className="project-meta-tags">
-                <span className="project-cat-tag" data-category={project.category}>{project.category}</span>
+              <div className="project-meta-tags" style={{ marginBottom: '16px' }}>
                 <span className="project-badge text-muted">
-                  Founder: {project.founderName} ({project.gradeOrAge})
+                  Founder: {project.founderName}{project.gradeOrAge?.trim() ? ` (${project.gradeOrAge.trim()})` : ''}
                 </span>
                 {project.schoolName && <span className="project-badge text-muted">{project.schoolName}</span>}
+              </div>
+              <div className="project-meta-tags">
+                {project.tags.map(tag => (
+                  <span key={tag} className="project-topic-tag" data-category={getMappedCategory(tag)}>
+                    {tag}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
@@ -263,8 +269,15 @@ export const ProjectDetail: React.FC = () => {
                     <Users size={18} /> Actively Recruiting
                   </div>
                   <p className="mt-2 text-sm text-center">
-                    {project.founderName} is looking for: <br /> <strong>{project.rolesNeeded.join(', ')}</strong>
+                    {project.founderName} is looking for:
                   </p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
+                    {project.rolesNeeded.map((role, idx) => (
+                      <span key={role} className={`pd-role-pill role-pill-${idx % 5}`}>
+                        {role}
+                      </span>
+                    ))}
+                  </div>
                   <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
                     <a href={`mailto:${project.founderEmail}?subject=Interested in joining the ${project.name} team!`} className="flex-1 block" style={{ flex: 1 }}>
                       <Button variant="primary" fullWidth>Join the Team</Button>

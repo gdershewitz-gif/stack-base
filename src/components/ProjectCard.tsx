@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Instagram, Youtube, Linkedin, Link as LinkIcon, MessageCircle, FileText, Video, ExternalLink, ChevronUp } from 'lucide-react';
 import type { Project } from '../data/projects';
+import { getMappedCategory } from '../data/projects';
 import { supabase } from '../lib/supabase';
 import './ProjectCard.css';
 
@@ -49,33 +50,6 @@ export const ProjectCard: React.FC<{ project: Project }> = React.memo(({ project
     }
   };
 
-  const getKeywords = (desc: string, category: string) => {
-    const keywords = new Set<string>();
-    keywords.add(category);
-    const lowerDesc = desc.toLowerCase();
-    if (lowerDesc.includes('ai ') || lowerDesc.includes('artificial intelligence') || lowerDesc.includes('gpt')) keywords.add('AI');
-    if (lowerDesc.includes('market') || lowerDesc.includes('seo') || lowerDesc.includes('grow')) keywords.add('Marketing');
-    if (lowerDesc.includes('tech') || lowerDesc.includes('software') || lowerDesc.includes('app') || lowerDesc.includes('code')) keywords.add('Tech');
-    if (lowerDesc.includes('business') || lowerDesc.includes('startup') || lowerDesc.includes('founder') || lowerDesc.includes('hustle')) keywords.add('Business');
-    if (lowerDesc.includes('data') || lowerDesc.includes('analytic')) keywords.add('Data');
-    if (lowerDesc.includes('design') || lowerDesc.includes('creative') || lowerDesc.includes('art')) keywords.add('Design');
-    if (lowerDesc.includes('social media') || lowerDesc.includes('instagram') || lowerDesc.includes('tiktok')) keywords.add('Social Media');
-    if (lowerDesc.includes('sustainabl') || lowerDesc.includes('eco') || lowerDesc.includes('green') || lowerDesc.includes('plastic')) keywords.add('Sustainability');
-    if (lowerDesc.includes('health') || lowerDesc.includes('mental') || lowerDesc.includes('wellness') || lowerDesc.includes('support')) keywords.add('Health & Wellness');
-    if (lowerDesc.includes('tutor') || lowerDesc.includes('learn') || lowerDesc.includes('student') || lowerDesc.includes('school')) keywords.add('Education');
-    return Array.from(keywords).slice(0, 4);
-  };
-
-  const getMappedCategory = (tag: string) => {
-    const t = tag.toLowerCase();
-    if (['app or website', 'tech', 'ai', 'design'].includes(t)) return 'App or Website';
-    if (['business or brand', 'business', 'marketing'].includes(t)) return 'Business or Brand';
-    if (['nonprofit', 'education', 'community'].includes(t)) return 'Nonprofit';
-    if (['product or ecommerce', 'ecommerce'].includes(t)) return 'Product or Ecommerce';
-    if (['side hustle', 'freelance'].includes(t)) return 'Side Hustle';
-    return 'Other';
-  };
-
   const getSocialPlatform = (url?: string) => {
     if (!url) return null;
     const lowerUrl = url.toLowerCase();
@@ -88,7 +62,7 @@ export const ProjectCard: React.FC<{ project: Project }> = React.memo(({ project
     return { name: 'Social', icon: LinkIcon };
   };
 
-  const tags = getKeywords(project.longDescription || project.shortDescription, project.category);
+  const tags = project.tags || [];
   const socialPlat = getSocialPlatform(project.socialUrl);
 
   return (
@@ -128,9 +102,9 @@ export const ProjectCard: React.FC<{ project: Project }> = React.memo(({ project
 
       <div className="pc2-founder">
         <strong>{project.founderName}</strong> 
-        {project.gradeOrAge && (
+        {(project.gradeOrAge?.trim() || project.schoolName?.trim()) && (
           <span className="text-muted ml-2">
-            ({project.gradeOrAge}{project.schoolName ? `, ${project.schoolName}` : ''})
+            ({[project.gradeOrAge?.trim(), project.schoolName?.trim()].filter(Boolean).join(', ')})
           </span>
         )}
       </div>

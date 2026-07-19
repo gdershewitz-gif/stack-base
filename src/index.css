@@ -93,6 +93,20 @@ button {
 .filter-pill.active[data-active-cat="Other"] { background-color: #f1f5f9 !important; color: #334155 !important; border-color: #e2e8f0 !important; }
 .filter-pill.active[data-active-cat="All"] { background-color: #0f172a !important; color: #ffffff !important; border-color: #0f172a !important; }
 
+/* Topic tag pills — scoped to pc2-topic-tag and project-topic-tag */
+.pc2-topic-tag[data-category="App or Website"],
+.project-topic-tag[data-category="App or Website"]   { background-color: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
+.pc2-topic-tag[data-category="Business or Brand"],
+.project-topic-tag[data-category="Business or Brand"] { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
+.pc2-topic-tag[data-category="Nonprofit"],
+.project-topic-tag[data-category="Nonprofit"]         { background-color: #ccfbf1; color: #115e59; border-color: #99f6e4; }
+.pc2-topic-tag[data-category="Product or Ecommerce"],
+.project-topic-tag[data-category="Product or Ecommerce"] { background-color: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; }
+.pc2-topic-tag[data-category="Side Hustle"],
+.project-topic-tag[data-category="Side Hustle"]       { background-color: #ffedd5; color: #9a3412; border-color: #fed7aa; }
+.pc2-topic-tag[data-category="Other"],
+.project-topic-tag[data-category="Other"]             { background-color: #f1f5f9; color: #475569; border-color: #e2e8f0; }
+
 /* Transitions */
 .transition-colors {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;

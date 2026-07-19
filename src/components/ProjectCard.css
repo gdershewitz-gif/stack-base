@@ -198,7 +198,7 @@
   font-size: 0.85rem;
   font-weight: 600;
   padding: 6px 14px;
-  border-radius: 8px;
+  border-radius: 9999px;
 }
 
 .role-pill-0 { background: #dbeafe; color: #1e40af; }
@@ -217,12 +217,12 @@
 
 .pc2-topic-tag {
   font-size: 0.8rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #64748b;
   border: 1px solid #cbd5e1;
   padding: 4px 12px;
   border-radius: 9999px;
-  background-color: transparent;
+  background-color: #f1f5f9;
 }
 
 .pc2-footer {
