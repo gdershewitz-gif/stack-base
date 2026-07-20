@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '../components/Button';
 import { SEO } from '../components/SEO';
+import { Card } from '../components/Card';
 import { supabase } from '../lib/supabase';
 import { ROLES_AVAILABLE } from '../data/projects';
 import type { Category } from '../data/projects';
@@ -106,15 +107,15 @@ export const Submit: React.FC = () => {
   if (isSubmitted) {
     return (
       <div className="submit-page container">
-        <div className="success-container">
+        <Card padding="lg" className="success-container" style={{ textAlign: 'center' }}>
           <CheckCircle size={64} className="success-icon" />
           <h2>Thanks for submitting!</h2>
-          <p>Your project has been submitted to FoundrBoard. It will appear on the browse page once an admin approves it.</p>
+          <p className="text-muted mt-2 mb-4">Your project has been submitted to FoundrBoard. It will appear on the browse page once an admin approves it.</p>
           <Button variant="outline" onClick={() => {
             setIsSubmitted(false);
             setFormData(prev => ({ ...prev, name: '', shortDescription: '', longDescription: '', demoUrl: '' }));
           }}>Submit another project</Button>
-        </div>
+        </Card>
       </div>
     );
   }
@@ -133,110 +134,115 @@ export const Submit: React.FC = () => {
 
       <form className="submit-form" onSubmit={handleSubmit}>
         {errorMsg && (
-          <div style={{ backgroundColor: '#fee2e2', color: '#b91c1c', padding: '12px', borderRadius: '8px', marginBottom: '24px' }}>
+          <div style={{ backgroundColor: '#fee2e2', color: '#b91c1c', padding: '12px', borderRadius: '8px', marginBottom: '20px' }}>
             {errorMsg}
           </div>
         )}
 
-        <section className="form-section">
-          <h3>1. Project Details</h3>
-          <div className="form-group">
-            <label htmlFor="name">Project Name *</label>
-            <input type="text" id="name" name="name" required value={formData.name} onChange={handleChange} disabled={isSubmitting} placeholder="What is your project called?" />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="category">Category *</label>
-            <select id="category" name="category" required value={formData.category} onChange={handleChange} disabled={isSubmitting}>
-              <option value="App or Website">App or Website</option>
-              <option value="Business or Brand">Business or Brand</option>
-              <option value="Nonprofit">Nonprofit</option>
-              <option value="Product or Ecommerce">Product or Ecommerce</option>
-              <option value="Newsletter or Blog">Newsletter or Blog</option>
-              <option value="Side Hustle">Side Hustle</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="shortDescription">One-Line Description (Optional)</label>
-            <input type="text" id="shortDescription" name="shortDescription" maxLength={100} value={formData.shortDescription} onChange={handleChange} disabled={isSubmitting} placeholder="A short, catchy summary of your project." />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="longDescription">Full Description (Optional)</label>
-            <textarea id="longDescription" name="longDescription" rows={5} value={formData.longDescription} onChange={handleChange} disabled={isSubmitting} placeholder="What did you build? Why did you build it? What stage are you at?" />
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="demoUrl">Website or Demo Link (Optional)</label>
-              <input type="url" id="demoUrl" name="demoUrl" value={formData.demoUrl} onChange={handleChange} disabled={isSubmitting} placeholder="https://" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="socialUrl">Instagram or Social Link (Optional)</label>
-              <input type="text" id="socialUrl" name="socialUrl" value={formData.socialUrl} onChange={handleChange} disabled={isSubmitting} placeholder="@username or URL" />
-            </div>
-          </div>
-        </section>
-
-        <hr className="form-divider" />
-
-        <section className="form-section">
-          <h3>2. Team & Recruiting</h3>
-          <div className="form-group">
-            <label className="checkbox-label" style={{ fontWeight: 600 }}>
-              <input type="checkbox" name="recruiting" checked={formData.recruiting} onChange={handleChange} disabled={isSubmitting} />
-              Are you currently looking for team members? (Optional)
-            </label>
-          </div>
-
-          {formData.recruiting && (
-            <div className="form-group role-selection">
-              <label>What roles do you need?</label>
-              <div className="checkbox-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '8px' }}>
-                {ROLES_AVAILABLE.map(role => (
-                  <label key={role} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={formData.rolesNeeded.includes(role)}
-                      onChange={() => handleRoleToggle(role)}
-                      disabled={isSubmitting}
-                    />
-                    {role}
-                  </label>
-                ))}
+        <div className="submit-sections-container">
+          <Card padding="md">
+            <section className="form-section">
+              <h3>1. Project Details</h3>
+              <div className="form-group">
+                <label htmlFor="name">Project Name *</label>
+                <input type="text" id="name" name="name" required value={formData.name} onChange={handleChange} disabled={isSubmitting} placeholder="What is your project called?" />
               </div>
-            </div>
-          )}
-        </section>
 
-        <hr className="form-divider" />
+              <div className="form-group">
+                <label htmlFor="category">Category *</label>
+                <select id="category" name="category" required value={formData.category} onChange={handleChange} disabled={isSubmitting}>
+                  <option value="App or Website">App or Website</option>
+                  <option value="Business or Brand">Business or Brand</option>
+                  <option value="Nonprofit">Nonprofit</option>
+                  <option value="Product or Ecommerce">Product or Ecommerce</option>
+                  <option value="Newsletter or Blog">Newsletter or Blog</option>
+                  <option value="Side Hustle">Side Hustle</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
 
-        <section className="form-section">
-          <h3>3. Founder Details</h3>
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="founderName">Your Name (Optional)</label>
-              <input type="text" id="founderName" name="founderName" value={formData.founderName} onChange={handleChange} disabled={isSubmitting} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="gradeOrAge">Grade or Age (Optional)</label>
-              <input type="text" id="gradeOrAge" name="gradeOrAge" value={formData.gradeOrAge} onChange={handleChange} disabled={isSubmitting} placeholder="e.g. 11th Grade, High School Junior, 16" />
-            </div>
-          </div>
+              <div className="form-group">
+                <label htmlFor="shortDescription">One-Line Description (Optional)</label>
+                <input type="text" id="shortDescription" name="shortDescription" maxLength={100} value={formData.shortDescription} onChange={handleChange} disabled={isSubmitting} placeholder="A short, catchy summary of your project." />
+              </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="schoolName">School Name (Optional)</label>
-              <input type="text" id="schoolName" name="schoolName" value={formData.schoolName} onChange={handleChange} disabled={isSubmitting} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="founderEmail">Contact Email (Optional)</label>
-              <input type="email" id="founderEmail" name="founderEmail" value={formData.founderEmail} onChange={handleChange} disabled={isSubmitting} />
-              <p className="text-sm text-muted mt-1">Needed if someone wants to join your team!</p>
-            </div>
-          </div>
-        </section>
+              <div className="form-group">
+                <label htmlFor="longDescription">Full Description (Optional)</label>
+                <textarea id="longDescription" name="longDescription" rows={4} value={formData.longDescription} onChange={handleChange} disabled={isSubmitting} placeholder="What did you build? Why did you build it? What stage are you at?" />
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="demoUrl">Website or Demo Link (Optional)</label>
+                  <input type="url" id="demoUrl" name="demoUrl" value={formData.demoUrl} onChange={handleChange} disabled={isSubmitting} placeholder="https://" />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="socialUrl">Instagram or Social Link (Optional)</label>
+                  <input type="text" id="socialUrl" name="socialUrl" value={formData.socialUrl} onChange={handleChange} disabled={isSubmitting} placeholder="@username or URL" />
+                </div>
+              </div>
+            </section>
+          </Card>
+
+          <Card padding="md">
+            <section className="form-section">
+              <h3>2. Team & Recruiting</h3>
+              <div className="form-group">
+                <label className="checkbox-label" style={{ fontWeight: 600 }}>
+                  <input type="checkbox" name="recruiting" checked={formData.recruiting} onChange={handleChange} disabled={isSubmitting} />
+                  Are you currently looking for team members? (Optional)
+                </label>
+              </div>
+
+              {formData.recruiting && (
+                <div className="form-group role-selection">
+                  <label>What roles do you need?</label>
+                  <div className="checkbox-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '8px' }}>
+                    {ROLES_AVAILABLE.map(role => (
+                      <label key={role} className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          checked={formData.rolesNeeded.includes(role)}
+                          onChange={() => handleRoleToggle(role)}
+                          disabled={isSubmitting}
+                        />
+                        {role}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </section>
+          </Card>
+
+          <Card padding="md">
+            <section className="form-section">
+              <h3>3. Founder Details</h3>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="founderName">Your Name (Optional)</label>
+                  <input type="text" id="founderName" name="founderName" value={formData.founderName} onChange={handleChange} disabled={isSubmitting} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="gradeOrAge">Grade or Age (Optional)</label>
+                  <input type="text" id="gradeOrAge" name="gradeOrAge" value={formData.gradeOrAge} onChange={handleChange} disabled={isSubmitting} placeholder="e.g. 11th Grade, High School Junior, 16" />
+                </div>
+              </div>
+
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="schoolName">School Name (Optional)</label>
+                  <input type="text" id="schoolName" name="schoolName" value={formData.schoolName} onChange={handleChange} disabled={isSubmitting} />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="founderEmail">Contact Email (Optional)</label>
+                  <input type="email" id="founderEmail" name="founderEmail" value={formData.founderEmail} onChange={handleChange} disabled={isSubmitting} />
+                  <p className="text-sm text-muted mt-1">Needed if someone wants to join your team!</p>
+                </div>
+              </div>
+            </section>
+          </Card>
+        </div>
 
         <Button type="submit" size="lg" fullWidth disabled={isSubmitting}>
           {isSubmitting ? (

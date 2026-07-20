@@ -1,20 +1,32 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap');
 
 :root {
+  /* ── Brand ───────────────────────────────── */
   --primary: #1D9E75;
   --primary-hover: #15805e;
+  --primary-light: #a7f3d0;
+
+  /* ── Surfaces ────────────────────────────── */
   --bg-color: #ffffff;
   --section-bg: #f9fafb;
   --text-main: #111827;
   --text-muted: #6b7280;
   --border-color: #e5e7eb;
-  
-  --badge-free-bg: #dcfce7;
-  --badge-free-text: #166534;
-  --badge-freemium-bg: #dbeafe;
-  --badge-freemium-text: #1e40af;
-  --badge-paid-bg: #ffedd5;
-  --badge-paid-text: #9a3412;
+
+  /* ── Category palette (shared tokens) ────── */
+  --cat-app-bg: #dbeafe;      --cat-app-text: #1e40af;      --cat-app-border: #bfdbfe;
+  --cat-biz-bg: #fef3c7;      --cat-biz-text: #92400e;      --cat-biz-border: #fde68a;
+  --cat-npo-bg: #ccfbf1;      --cat-npo-text: #115e59;      --cat-npo-border: #99f6e4;
+  --cat-ecom-bg: #f3e8ff;     --cat-ecom-text: #6b21a8;     --cat-ecom-border: #e9d5ff;
+  --cat-side-bg: #ffedd5;     --cat-side-text: #9a3412;     --cat-side-border: #fed7aa;
+  --cat-other-bg: #f1f5f9;    --cat-other-text: #334155;    --cat-other-border: #e2e8f0;
+
+  /* ── Role pill palette ───────────────────── */
+  --role-0-bg: #dbeafe; --role-0-text: #1e40af;
+  --role-1-bg: #dcfce7; --role-1-text: #166534;
+  --role-2-bg: #f3e8ff; --role-2-text: #6b21a8;
+  --role-3-bg: #ffedd5; --role-3-text: #9a3412;
+  --role-4-bg: #fce7f3; --role-4-text: #86198f;
 }
 
 * {
@@ -57,57 +69,33 @@ button {
   padding: 0 1rem;
 }
 
-/* Category Color System */
-[data-category="App or Website"] { background-color: #dbeafe !important; color: #1e40af !important; border-color: #bfdbfe !important; }
-[data-category="Business or Brand"] { background-color: #fef3c7 !important; color: #92400e !important; border-color: #fde68a !important; }
-[data-category="Nonprofit"] { background-color: #ccfbf1 !important; color: #115e59 !important; border-color: #99f6e4 !important; }
-[data-category="Product or Ecommerce"] { background-color: #f3e8ff !important; color: #6b21a8 !important; border-color: #e9d5ff !important; }
-[data-category="Side Hustle"] { background-color: #ffedd5 !important; color: #9a3412 !important; border-color: #fed7aa !important; }
-[data-category="Newsletter or Blog"] { background-color: #f1f5f9 !important; color: #334155 !important; border-color: #e2e8f0 !important; }
-[data-category="Other"] { background-color: #f1f5f9 !important; color: #334155 !important; border-color: #e2e8f0 !important; }
+/* ── Shared role pill classes (used by Tag.tsx variant="role") ─────────────── */
+.role-pill-0 { background: var(--role-0-bg); color: var(--role-0-text); }
+.role-pill-1 { background: var(--role-1-bg); color: var(--role-1-text); }
+.role-pill-2 { background: var(--role-2-bg); color: var(--role-2-text); }
+.role-pill-3 { background: var(--role-3-bg); color: var(--role-3-text); }
+.role-pill-4 { background: var(--role-4-bg); color: var(--role-4-text); }
 
-/* Global Filter Pills */
-.filter-pill {
-  padding: 8px 16px;
-  border-radius: 9999px;
-  border: 1px solid var(--border-color, #e2e8f0);
-  background-color: var(--bg-color, #ffffff);
-  color: var(--text-muted, #64748b);
-  font-weight: 500;
-  font-size: 0.95rem;
-  transition: all 0.2s;
-  cursor: pointer;
-}
+/* ── Category Color System (authoritative, used by all data-category elements) */
+[data-category="App or Website"]       { background-color: var(--cat-app-bg)  !important; color: var(--cat-app-text)  !important; border-color: var(--cat-app-border)  !important; }
+[data-category="Business or Brand"]    { background-color: var(--cat-biz-bg)  !important; color: var(--cat-biz-text)  !important; border-color: var(--cat-biz-border)  !important; }
+[data-category="Nonprofit"]            { background-color: var(--cat-npo-bg)  !important; color: var(--cat-npo-text)  !important; border-color: var(--cat-npo-border)  !important; }
+[data-category="Product or Ecommerce"] { background-color: var(--cat-ecom-bg) !important; color: var(--cat-ecom-text) !important; border-color: var(--cat-ecom-border) !important; }
+[data-category="Side Hustle"]          { background-color: var(--cat-side-bg) !important; color: var(--cat-side-text) !important; border-color: var(--cat-side-border) !important; }
+[data-category="Newsletter or Blog"]   { background-color: var(--cat-other-bg)!important; color: var(--cat-other-text)!important; border-color: var(--cat-other-border)!important; }
+[data-category="Other"]                { background-color: var(--cat-other-bg)!important; color: var(--cat-other-text)!important; border-color: var(--cat-other-border)!important; }
 
-.filter-pill:hover {
-  border-color: #cbd5e1;
-  color: var(--text-main, #0f172a);
-}
+/* ── Active filter pills with category theming ────────────────────────────── */
+.filter-pill.active[data-active-cat="App or Website"]       { background-color: var(--cat-app-bg)  !important; color: var(--cat-app-text)  !important; border-color: var(--cat-app-border)  !important; }
+.filter-pill.active[data-active-cat="Business or Brand"]    { background-color: var(--cat-biz-bg)  !important; color: var(--cat-biz-text)  !important; border-color: var(--cat-biz-border)  !important; }
+.filter-pill.active[data-active-cat="Nonprofit"]            { background-color: var(--cat-npo-bg)  !important; color: var(--cat-npo-text)  !important; border-color: var(--cat-npo-border)  !important; }
+.filter-pill.active[data-active-cat="Product or Ecommerce"] { background-color: var(--cat-ecom-bg) !important; color: var(--cat-ecom-text) !important; border-color: var(--cat-ecom-border) !important; }
+.filter-pill.active[data-active-cat="Side Hustle"]          { background-color: var(--cat-side-bg) !important; color: var(--cat-side-text) !important; border-color: var(--cat-side-border) !important; }
+.filter-pill.active[data-active-cat="Newsletter or Blog"]   { background-color: var(--cat-other-bg)!important; color: var(--cat-other-text)!important; border-color: var(--cat-other-border)!important; }
+.filter-pill.active[data-active-cat="Other"]                { background-color: var(--cat-other-bg)!important; color: var(--cat-other-text)!important; border-color: var(--cat-other-border)!important; }
+.filter-pill.active[data-active-cat="All"]                  { background-color: #0f172a !important; color: #ffffff !important; border-color: #0f172a !important; }
 
-.filter-pill.active[data-active-cat="App or Website"] { background-color: #dbeafe !important; color: #1e40af !important; border-color: #bfdbfe !important; }
-.filter-pill.active[data-active-cat="Business or Brand"] { background-color: #fef3c7 !important; color: #92400e !important; border-color: #fde68a !important; }
-.filter-pill.active[data-active-cat="Nonprofit"] { background-color: #ccfbf1 !important; color: #115e59 !important; border-color: #99f6e4 !important; }
-.filter-pill.active[data-active-cat="Product or Ecommerce"] { background-color: #f3e8ff !important; color: #6b21a8 !important; border-color: #e9d5ff !important; }
-.filter-pill.active[data-active-cat="Side Hustle"] { background-color: #ffedd5 !important; color: #9a3412 !important; border-color: #fed7aa !important; }
-.filter-pill.active[data-active-cat="Newsletter or Blog"] { background-color: #f1f5f9 !important; color: #334155 !important; border-color: #e2e8f0 !important; }
-.filter-pill.active[data-active-cat="Other"] { background-color: #f1f5f9 !important; color: #334155 !important; border-color: #e2e8f0 !important; }
-.filter-pill.active[data-active-cat="All"] { background-color: #0f172a !important; color: #ffffff !important; border-color: #0f172a !important; }
-
-/* Topic tag pills — scoped to pc2-topic-tag and project-topic-tag */
-.pc2-topic-tag[data-category="App or Website"],
-.project-topic-tag[data-category="App or Website"]   { background-color: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
-.pc2-topic-tag[data-category="Business or Brand"],
-.project-topic-tag[data-category="Business or Brand"] { background-color: #fef3c7; color: #92400e; border-color: #fde68a; }
-.pc2-topic-tag[data-category="Nonprofit"],
-.project-topic-tag[data-category="Nonprofit"]         { background-color: #ccfbf1; color: #115e59; border-color: #99f6e4; }
-.pc2-topic-tag[data-category="Product or Ecommerce"],
-.project-topic-tag[data-category="Product or Ecommerce"] { background-color: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; }
-.pc2-topic-tag[data-category="Side Hustle"],
-.project-topic-tag[data-category="Side Hustle"]       { background-color: #ffedd5; color: #9a3412; border-color: #fed7aa; }
-.pc2-topic-tag[data-category="Other"],
-.project-topic-tag[data-category="Other"]             { background-color: #f1f5f9; color: #475569; border-color: #e2e8f0; }
-
-/* Transitions */
+/* ── Transition utilities ────────────────────────────────────────────────── */
 .transition-colors {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);

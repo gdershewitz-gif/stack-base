@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ExternalLink, ArrowLeft, Users, ChevronUp, MessageSquare, Loader2, Instagram } from 'lucide-react';
+import { ExternalLink, ArrowLeft, ChevronUp, MessageSquare, Loader2, Instagram } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { Project, Comment } from '../data/projects';
-import { mapDbToProject, getMappedCategory } from '../data/projects';
+import { mapDbToProject } from '../data/projects';
 import { Button } from '../components/Button';
 import { ProjectCard } from '../components/ProjectCard';
 import { SEO } from '../components/SEO';
+import { Card } from '../components/Card';
+import { Tag } from '../components/Tag';
+import { Avatar } from '../components/Avatar';
 import './ProjectDetail.css';
 
 export const ProjectDetail: React.FC = () => {
@@ -22,7 +25,7 @@ export const ProjectDetail: React.FC = () => {
 
   const [newCommentName, setNewCommentName] = useState('');
   const [newCommentText, setNewCommentText] = useState('');
-  const [isSubmittingComment, setIsSubmittingComment] = useState(false)
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -181,9 +184,17 @@ export const ProjectDetail: React.FC = () => {
         {/* Main Content */}
         <div className="project-main">
           <div className="project-hero-header">
+            <Avatar 
+              src={project.coverImageUrl} 
+              name={project.name} 
+              size="lg" 
+              variant="project" 
+              category={project.category}
+              className="project-hero-avatar"
+            />
             <div className="project-hero-info">
               <h1>{project.name}</h1>
-              <div className="project-meta-tags" style={{ marginBottom: '16px' }}>
+              <div className="project-meta-tags" style={{ marginBottom: '12px' }}>
                 <span className="project-badge text-muted">
                   Founder: {project.founderName}{project.gradeOrAge?.trim() ? ` (${project.gradeOrAge.trim()})` : ''}
                 </span>
@@ -191,24 +202,25 @@ export const ProjectDetail: React.FC = () => {
               </div>
               <div className="project-meta-tags">
                 {project.tags.map(tag => (
-                  <span key={tag} className="project-topic-tag" data-category={getMappedCategory(tag)}>
-                    {tag}
-                  </span>
+                  <Tag key={tag} variant="category" value={tag} />
                 ))}
               </div>
             </div>
           </div>
 
-          <div className="project-about-section">
+          <Card padding="md" className="project-about-section">
             <h2>About what we built</h2>
             <p className="project-long-desc">{project.longDescription}</p>
-          </div>
+          </Card>
 
           {/* Comments Section */}
-          <div className="comments-section mt-12">
-            <h2><MessageSquare size={20} className="inline mr-2 text-primary" style={{ display: 'inline', marginRight: '8px' }} /> Feedback & Encouragement</h2>
+          <Card padding="md" className="comments-section mt-8">
+            <h2>
+              <MessageSquare size={20} className="inline mr-2 text-primary" style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} /> 
+              Feedback & Encouragement
+            </h2>
 
-            <form className="comment-form" onSubmit={handlePostComment}>
+            <form className="comment-form mt-4" onSubmit={handlePostComment}>
               <div className="form-group row-flex">
                 <input type="text" placeholder="Your Name" required value={newCommentName} onChange={e => setNewCommentName(e.target.value)} className="comment-input half-width" disabled={isSubmittingComment} />
               </div>
@@ -220,7 +232,7 @@ export const ProjectDetail: React.FC = () => {
               </Button>
             </form>
 
-            <div className="comments-list mt-8">
+            <div className="comments-list mt-6">
               {comments.length > 0 ? comments.map(comment => (
                 <div key={comment.id} className="comment-item">
                   <div className="comment-header">
@@ -233,12 +245,12 @@ export const ProjectDetail: React.FC = () => {
                 <p className="text-muted italic">No comments yet. Be the first to encourage {project.founderName}!</p>
               )}
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* Sidebar */}
         <div className="project-sidebar">
-          <div className="action-card">
+          <Card padding="md" className="action-card">
             <h3>{project.shortDescription}</h3>
 
             <button
@@ -250,9 +262,9 @@ export const ProjectDetail: React.FC = () => {
               <div className="upvote-label">{hasUpvoted ? 'Upvoted' : 'Upvote Project'}</div>
             </button>
 
-            <div className="links-group mt-6">
+            <div className="links-group mt-4">
               {project.demoUrl && (
-                <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%' }}>
                   <Button variant="outline" fullWidth>
                     {project.category === 'App or Website' ? 'Visit Website' : 'View Demo/Product'} <ExternalLink size={16} className="ml-2" />
                   </Button>
@@ -265,27 +277,25 @@ export const ProjectDetail: React.FC = () => {
             <div className="recruiting-box">
               {project.recruiting ? (
                 <>
-                  <div className="recruiting-status active">
-                    <Users size={18} /> Actively Recruiting
+                  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
+                    <Tag variant="status" value="Actively Recruiting" />
                   </div>
                   <p className="mt-2 text-sm text-center">
                     {project.founderName} is looking for:
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                     {project.rolesNeeded.map((role, idx) => (
-                      <span key={role} className={`pd-role-pill role-pill-${idx % 5}`}>
-                        {role}
-                      </span>
+                      <Tag key={role} variant="role" value={role} colorIndex={idx} />
                     ))}
                   </div>
                   <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
                     <a href={`mailto:${project.founderEmail}?subject=Interested in joining the ${project.name} team!`} className="flex-1 block" style={{ flex: 1 }}>
-                      <Button variant="primary" fullWidth>Join the Team</Button>
+                      <Button variant="primary" fullWidth style={{ fontSize: '0.9rem', padding: '8px 12px' }}>Join the Team</Button>
                     </a>
                     {project.socialUrl && (
                       <a href={project.socialUrl} target="_blank" rel="noopener noreferrer">
-                        <Button variant="outline" style={{ padding: '0 16px', height: '100%', display: 'flex', alignItems: 'center' }}>
-                          <Instagram size={20} />
+                        <Button variant="outline" style={{ padding: '0 12px', height: '100%', display: 'flex', alignItems: 'center', minWidth: '40px', justifyContent: 'center' }}>
+                          <Instagram size={18} />
                         </Button>
                       </a>
                     )}
@@ -293,8 +303,8 @@ export const ProjectDetail: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <div className="recruiting-status inactive text-muted">
-                    Not currently recruiting
+                  <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '12px' }}>
+                    <Tag variant="status" value="Not recruiting" />
                   </div>
                   {project.socialUrl && (
                     <div style={{ marginTop: '16px' }}>
@@ -308,14 +318,13 @@ export const ProjectDetail: React.FC = () => {
                 </>
               )}
             </div>
-
-          </div>
+          </Card>
         </div>
       </div>
 
       {/* Related Projects */}
       {relatedProjects.length > 0 && (
-        <div className="related-projects-section mt-16">
+        <div className="related-projects-section mt-12">
           <h2>More {project.category} Projects</h2>
           <div className="tools-grid">
             {relatedProjects.map(t => (

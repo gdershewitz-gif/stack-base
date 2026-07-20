@@ -1,0 +1,40 @@
+.fb-avatar {
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--border-color, #e5e7eb);
+  background-color: var(--section-bg, #f9fafb);
+}
+
+.fb-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--text-main, #111827);
+  user-select: none;
+}
+
+/* Project Avatars — soft rounded squares */
+.fb-avatar-project {
+  border-radius: 12px;
+}
+
+/* Founder Avatars — fully circular */
+.fb-avatar-founder {
+  border-radius: 9999px;
+}
+
+/* Sizes */
+.fb-avatar-sm  { width: 32px; height: 32px; font-size: 0.8rem; }
+.fb-avatar-md  { width: 48px; height: 48px; font-size: 1.1rem; }
+.fb-avatar-lg  { width: 64px; height: 64px; font-size: 1.4rem; }
+.fb-avatar-xl  { width: 80px; height: 80px; font-size: 1.8rem; }
+
+/* Category-themed initials backgrounds — uses shared tokens from index.css */
+.fb-avatar-placeholder[data-category="App or Website"]       { background-color: var(--cat-app-bg);   color: var(--cat-app-text);   border-color: var(--cat-app-border); }
+.fb-avatar-placeholder[data-category="Business or Brand"]    { background-color: var(--cat-biz-bg);   color: var(--cat-biz-text);   border-color: var(--cat-biz-border); }
+.fb-avatar-placeholder[data-category="Nonprofit"]            { background-color: var(--cat-npo-bg);   color: var(--cat-npo-text);   border-color: var(--cat-npo-border); }
+.fb-avatar-placeholder[data-category="Product or Ecommerce"] { background-color: var(--cat-ecom-bg);  color: var(--cat-ecom-text);  border-color: var(--cat-ecom-border); }
+.fb-avatar-placeholder[data-category="Side Hustle"]          { background-color: var(--cat-side-bg);  color: var(--cat-side-text);  border-color: var(--cat-side-border); }
+.fb-avatar-placeholder[data-category="Other"]                { background-color: var(--cat-other-bg); color: var(--cat-other-text); border-color: var(--cat-other-border); }

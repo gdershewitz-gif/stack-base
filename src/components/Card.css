@@ -1,0 +1,38 @@
+.fb-card {
+  background-color: var(--bg-color, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.fb-card-hoverable {
+  cursor: pointer;
+}
+
+.fb-card-hoverable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
+}
+
+.fb-card-clickable {
+  cursor: pointer;
+}
+
+.fb-card-pad-none {
+  padding: 0;
+}
+
+.fb-card-pad-sm {
+  padding: 12px;
+}
+
+.fb-card-pad-md {
+  padding: 20px;
+}
+
+.fb-card-pad-lg {
+  padding: 32px;
+}

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Instagram, Youtube, Linkedin, Link as LinkIcon, MessageCircle, FileText, Video, ExternalLink, ChevronUp } from 'lucide-react';
 import type { Project } from '../data/projects';
-import { getMappedCategory } from '../data/projects';
 import { supabase } from '../lib/supabase';
+import { Card } from './Card';
+import { Tag } from './Tag';
+import { Avatar } from './Avatar';
 import './ProjectCard.css';
 
 export const ProjectCard: React.FC<{ project: Project }> = React.memo(({ project }) => {
@@ -11,7 +13,6 @@ export const ProjectCard: React.FC<{ project: Project }> = React.memo(({ project
   const [upvotes, setUpvotes] = useState(project.upvotes || 0);
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [isBouncing, setIsBouncing] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     const list = JSON.parse(localStorage.getItem('stagone_upvotes') || '[]');
@@ -66,38 +67,30 @@ export const ProjectCard: React.FC<{ project: Project }> = React.memo(({ project
   const socialPlat = getSocialPlatform(project.socialUrl);
 
   return (
-    <div 
+    <Card 
+      hoverable 
+      padding="none"
       className={`project-card-v2 ${project.featured ? 'featured' : ''}`}
       onClick={() => navigate(`/project/${project.id}`)}
     >
       <div className="pc2-header">
         <div className="pc2-title-group">
-          <div className="pc2-thumbnail-container">
-            {project.coverImageUrl && !imageError ? (
-              <img 
-                src={project.coverImageUrl} 
-                alt={`${project.name} logo`} 
-                className="pc2-thumbnail-image" 
-                loading="lazy"
-                onError={() => setImageError(true)}
-              />
-            ) : (
-              <div className="pc2-thumbnail-placeholder" data-category={project.category}>
-                {project.name.charAt(0).toUpperCase()}
-              </div>
-            )}
-          </div>
+          <Avatar 
+            src={project.coverImageUrl} 
+            name={project.name} 
+            size="md" 
+            variant="project" 
+            category={project.category} 
+          />
           <h3 className="pc2-title">{project.name}</h3>
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '16px' }}>
+      <div className="pc2-cat-tags-container">
         {project.featured && (
-          <span className="pc2-featured-badge">Featured</span>
+          <Tag variant="default" value="Featured" className="pc2-featured-badge" />
         )}
-        <span className="pc2-cat-badge" data-category={project.category} style={{ margin: 0 }}>
-          {project.category}
-        </span>
+        <Tag variant="category" value={project.category} />
       </div>
 
       <div className="pc2-founder">
@@ -116,9 +109,7 @@ export const ProjectCard: React.FC<{ project: Project }> = React.memo(({ project
           <span className="pc2-section-label">Looking for:</span>
           <div className="pc2-roles-list">
             {project.rolesNeeded.map((role, idx) => (
-              <span key={role} className={`pc2-role-pill role-pill-${idx % 5}`}>
-                {role}
-              </span>
+              <Tag key={role} variant="role" value={role} colorIndex={idx} />
             ))}
           </div>
         </div>
@@ -126,7 +117,7 @@ export const ProjectCard: React.FC<{ project: Project }> = React.memo(({ project
 
       <div className="pc2-tags-section">
         {tags.map(tag => (
-          <span key={tag} className="pc2-topic-tag" data-category={getMappedCategory(tag)}>{tag}</span>
+          <Tag key={tag} variant="category" value={tag} />
         ))}
       </div>
 
@@ -173,6 +164,6 @@ export const ProjectCard: React.FC<{ project: Project }> = React.memo(({ project
           )}
         </div>
       </div>
-    </div>
+    </Card>
   );
 });

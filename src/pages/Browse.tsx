@@ -3,6 +3,9 @@ import { Search, SlidersHorizontal, Loader2, Users } from 'lucide-react';
 import { ProjectCard } from '../components/ProjectCard';
 import { ProjectCardSkeleton } from '../components/ProjectCardSkeleton';
 import { SEO } from '../components/SEO';
+import { Card } from '../components/Card';
+import { Tag } from '../components/Tag';
+import { Button } from '../components/Button';
 import type { Category, Project } from '../data/projects';
 import { mapDbToProject } from '../data/projects';
 import { supabase } from '../lib/supabase';
@@ -121,50 +124,53 @@ export const Browse: React.FC = () => {
 
       <div className="browse-layout">
         <aside className="filters-sidebar">
-          <div className="filters-header">
-            <h3><SlidersHorizontal size={18} /> Filters</h3>
-          </div>
-          
-          <div className="filter-group">
-            <h4>Hiring Status</h4>
-            <label className="filter-label" style={{ cursor: 'pointer' }}>
-              <input 
-                type="checkbox" 
-                checked={recruitingOnly} 
-                onChange={(e) => setRecruitingOnly(e.target.checked)} 
-              />
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Users size={16} className="text-primary"/> Recruiting Now
-              </span>
-            </label>
-          </div>
-
-          <div className="filter-group">
-            <h4>Category</h4>
-            <div className="filter-options">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  className={`filter-pill ${selectedCategory === cat ? 'active' : ''}`}
-                  data-active-cat={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                >
-                  {cat}
-                </button>
-              ))}
+          <Card padding="md" className="filters-card">
+            <div className="filters-header">
+              <h3><SlidersHorizontal size={18} /> Filters</h3>
             </div>
-          </div>
-          
-          <button 
-            className="reset-btn"
-            onClick={() => {
-              setSelectedCategory('All');
-              setRecruitingOnly(false);
-              setSearchQuery('');
-            }}
-          >
-            Reset Filters
-          </button>
+            
+            <div className="filter-group">
+              <h4>Hiring Status</h4>
+              <label className="filter-label" style={{ cursor: 'pointer' }}>
+                <input 
+                  type="checkbox" 
+                  checked={recruitingOnly} 
+                  onChange={(e) => setRecruitingOnly(e.target.checked)} 
+                />
+                <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <Users size={16} className="text-primary"/> Recruiting Now
+                </span>
+              </label>
+            </div>
+
+            <div className="filter-group">
+              <h4>Category</h4>
+              <div className="filter-options">
+                {categories.map((cat) => (
+                  <Tag
+                    key={cat}
+                    variant="filter"
+                    value={cat}
+                    active={selectedCategory === cat}
+                    onClick={() => setSelectedCategory(cat)}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            <Button 
+              variant="outline"
+              fullWidth
+              className="reset-btn mt-4"
+              onClick={() => {
+                setSelectedCategory('All');
+                setRecruitingOnly(false);
+                setSearchQuery('');
+              }}
+            >
+              Reset Filters
+            </Button>
+          </Card>
         </aside>
 
         <div className="browse-results">
@@ -194,18 +200,12 @@ export const Browse: React.FC = () => {
               </div>
               
               {hasMore && (
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
-                  <button 
-                    className="load-more-btn" 
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '32px' }}>
+                  <Button 
+                    variant="outline"
                     onClick={() => setPage(p => p + 1)}
                     disabled={isLoadingMore}
                     style={{
-                      padding: '12px 24px',
-                      borderRadius: '8px',
-                      backgroundColor: 'transparent',
-                      border: '2px solid var(--border-color)',
-                      fontWeight: 600,
-                      cursor: isLoadingMore ? 'not-allowed' : 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '8px'
@@ -213,15 +213,15 @@ export const Browse: React.FC = () => {
                   >
                     {isLoadingMore ? <Loader2 className="animate-spin" size={18} /> : null}
                     {isLoadingMore ? 'Loading...' : 'Load More Projects'}
-                  </button>
+                  </Button>
                 </div>
               )}
             </>
           ) : (
-            <div className="no-results">
+            <Card padding="lg" className="no-results" style={{ textAlign: 'center' }}>
               <h3>No projects found</h3>
-              <p>Try adjusting your search or filters.</p>
-            </div>
+              <p className="text-muted mt-2">Try adjusting your search or filters.</p>
+            </Card>
           )}
         </div>
       </div>
