@@ -1,31 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { Search, SlidersHorizontal, Loader2, Users } from 'lucide-react';
+import { Search, Loader2, Users, SlidersHorizontal, RotateCcw } from 'lucide-react';
 import { ProjectCard } from '../components/ProjectCard';
 import { ProjectCardSkeleton } from '../components/ProjectCardSkeleton';
 import { SEO } from '../components/SEO';
 import { Card } from '../components/Card';
-import { Tag } from '../components/Tag';
 import { Button } from '../components/Button';
 import type { Category, Project } from '../data/projects';
-import { mapDbToProject } from '../data/projects';
+import { mapDbToProject, ROLES_AVAILABLE } from '../data/projects';
 import { supabase } from '../lib/supabase';
 import './Browse.css';
 
 export const Browse: React.FC = () => {
   const [projectsData, setProjectsData] = useState<Project[]>([]);
+  const [totalCount, setTotalCount] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<Category | 'All'>('All');
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [recruitingOnly, setRecruitingOnly] = useState(false);
   const [activeTab, setActiveTab] = useState<'upvotes' | 'newest' | 'recruiting'>('upvotes');
   
+  const [activeSidebarTab, setActiveSidebarTab] = useState<'Category' | 'Roles'>('Category');
+
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     setPage(0);
-  }, [searchQuery, selectedCategory, recruitingOnly, activeTab]);
+  }, [searchQuery, selectedCategories, selectedRoles, recruitingOnly, activeTab]);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -34,11 +38,15 @@ export const Browse: React.FC = () => {
       
       let query = supabase
         .from('projects')
-        .select('id, name, short_description, category, demo_url, social_url, recruiting, roles_needed, founder_name, school_name, grade_or_age, upvotes, featured, status, date_added, cover_image_url')
+        .select('id, name, short_description, category, demo_url, social_url, recruiting, roles_needed, founder_name, school_name, grade_or_age, upvotes, featured, status, date_added, cover_image_url', { count: 'exact' })
         .eq('status', 'approved');
 
-      if (selectedCategory !== 'All') {
-        query = query.eq('category', selectedCategory);
+      if (selectedCategories.length > 0) {
+        query = query.in('category', selectedCategories);
+      }
+
+      if (selectedRoles.length > 0) {
+        query = query.overlaps('roles_needed', selectedRoles);
       }
       
       if (recruitingOnly || activeTab === 'recruiting') {
@@ -63,12 +71,13 @@ export const Browse: React.FC = () => {
       const to = from + 11;
       query = query.range(from, to);
 
-      const { data, error } = await query;
+      const { data, error, count } = await query;
         
       if (data && !error) {
         const mapped = data.map(mapDbToProject);
         if (page === 0) {
           setProjectsData(mapped);
+          setTotalCount(count);
         } else {
           setProjectsData(prev => [...prev, ...mapped]);
         }
@@ -86,10 +95,9 @@ export const Browse: React.FC = () => {
     }, 300);
 
     return () => clearTimeout(timeoutId);
-  }, [searchQuery, selectedCategory, recruitingOnly, activeTab, page]);
+  }, [searchQuery, selectedCategories, selectedRoles, recruitingOnly, activeTab, page]);
 
-  const categories: (Category | 'All')[] = [
-    'All', 
+  const categoriesList: Category[] = [
     'App or Website', 
     'Business or Brand', 
     'Nonprofit', 
@@ -98,6 +106,25 @@ export const Browse: React.FC = () => {
     'Side Hustle', 
     'Other'
   ];
+
+  const handleCategoryToggle = (cat: Category) => {
+    setSelectedCategories(prev => 
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    );
+  };
+
+  const handleRoleToggle = (role: string) => {
+    setSelectedRoles(prev => 
+      prev.includes(role) ? prev.filter(r => r !== role) : [...prev, role]
+    );
+  };
+
+  const resetFilters = () => {
+    setSelectedCategories([]);
+    setSelectedRoles([]);
+    setRecruitingOnly(false);
+    setSearchQuery('');
+  };
 
   return (
     <div className="browse-page container">
@@ -126,12 +153,19 @@ export const Browse: React.FC = () => {
         <aside className="filters-sidebar">
           <Card padding="md" className="filters-card">
             <div className="filters-header">
-              <h3><SlidersHorizontal size={18} /> Filters</h3>
+              <div className="filters-header-title">
+                <h3><SlidersHorizontal size={18} /> Filters</h3>
+                <span className="results-count">
+                  {totalCount !== null ? `${totalCount} results` : '...'}
+                </span>
+              </div>
+              <button className="reset-filters-btn" onClick={resetFilters} aria-label="Reset Filters">
+                <RotateCcw size={16} /> Reset
+              </button>
             </div>
             
             <div className="filter-group">
-              <h4>Hiring Status</h4>
-              <label className="filter-label" style={{ cursor: 'pointer' }}>
+              <label className="checkbox-label recruiting-toggle">
                 <input 
                   type="checkbox" 
                   checked={recruitingOnly} 
@@ -143,33 +177,57 @@ export const Browse: React.FC = () => {
               </label>
             </div>
 
-            <div className="filter-group">
-              <h4>Category</h4>
-              <div className="filter-options">
-                {categories.map((cat) => (
-                  <Tag
-                    key={cat}
-                    variant="filter"
-                    value={cat}
-                    active={selectedCategory === cat}
-                    onClick={() => setSelectedCategory(cat)}
-                  />
-                ))}
-              </div>
+            <div className="sidebar-tabs">
+              <button 
+                className={`sidebar-tab ${activeSidebarTab === 'Category' ? 'active' : ''}`}
+                onClick={() => setActiveSidebarTab('Category')}
+              >
+                Category
+              </button>
+              <button 
+                className={`sidebar-tab ${activeSidebarTab === 'Roles' ? 'active' : ''}`}
+                onClick={() => setActiveSidebarTab('Roles')}
+              >
+                Looking for
+              </button>
             </div>
+
+            {activeSidebarTab === 'Category' && (
+              <div className="filter-group">
+                <div className="filter-section-header">Top Categories</div>
+                <div className="checkbox-list">
+                  {categoriesList.map((cat) => (
+                    <label key={cat} className="checkbox-label">
+                      <input 
+                        type="checkbox"
+                        checked={selectedCategories.includes(cat)}
+                        onChange={() => handleCategoryToggle(cat)}
+                      />
+                      <span>{cat}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeSidebarTab === 'Roles' && (
+              <div className="filter-group">
+                <div className="filter-section-header">Common Roles</div>
+                <div className="checkbox-list">
+                  {ROLES_AVAILABLE.map((role) => (
+                    <label key={role} className="checkbox-label">
+                      <input 
+                        type="checkbox"
+                        checked={selectedRoles.includes(role)}
+                        onChange={() => handleRoleToggle(role)}
+                      />
+                      <span>{role}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
             
-            <Button 
-              variant="outline"
-              fullWidth
-              className="reset-btn mt-4"
-              onClick={() => {
-                setSelectedCategory('All');
-                setRecruitingOnly(false);
-                setSearchQuery('');
-              }}
-            >
-              Reset Filters
-            </Button>
           </Card>
         </aside>
 
