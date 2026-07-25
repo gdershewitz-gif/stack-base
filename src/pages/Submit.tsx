@@ -4,7 +4,7 @@ import { Button } from '../components/Button';
 import { SEO } from '../components/SEO';
 import { Card } from '../components/Card';
 import { supabase } from '../lib/supabase';
-import { ROLES_AVAILABLE } from '../data/projects';
+import { ROLES_AVAILABLE, SKILLS_AVAILABLE } from '../data/projects';
 import type { Category } from '../data/projects';
 import './Submit.css';
 
@@ -19,6 +19,9 @@ export const Submit: React.FC = () => {
     recruiting: boolean;
     rolesNeeded: string[];
     founderName: string;
+    founderMajor: string;
+    founderExperience: string[];
+    founderSkills: string[];
     schoolName: string;
     gradeOrAge: string;
     founderEmail: string;
@@ -32,11 +35,15 @@ export const Submit: React.FC = () => {
     recruiting: false,
     rolesNeeded: [],
     founderName: '',
+    founderMajor: '',
+    founderExperience: [],
+    founderSkills: [],
     schoolName: '',
     gradeOrAge: '',
     founderEmail: ''
   });
 
+  const [experienceInput, setExperienceInput] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -58,6 +65,33 @@ export const Submit: React.FC = () => {
         return { ...prev, rolesNeeded: [...prev.rolesNeeded, role] };
       }
     });
+  };
+
+  const handleSkillToggle = (skill: string) => {
+    setFormData(prev => {
+      if (prev.founderSkills.includes(skill)) {
+        return { ...prev, founderSkills: prev.founderSkills.filter(s => s !== skill) };
+      } else {
+        return { ...prev, founderSkills: [...prev.founderSkills, skill] };
+      }
+    });
+  };
+
+  const handleExperienceAdd = () => {
+    if (experienceInput.trim() && formData.founderExperience.length < 3) {
+      setFormData(prev => ({
+        ...prev,
+        founderExperience: [...prev.founderExperience, experienceInput.trim()]
+      }));
+      setExperienceInput('');
+    }
+  };
+
+  const handleExperienceRemove = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      founderExperience: prev.founderExperience.filter((_, i) => i !== index)
+    }));
   };
 
   const normalizeSocialUrl = (input: string) => {
@@ -86,6 +120,9 @@ export const Submit: React.FC = () => {
         recruiting: formData.recruiting,
         roles_needed: formData.recruiting ? formData.rolesNeeded : [],
         founder_name: formData.founderName,
+        founder_major: formData.founderMajor || null,
+        founder_experience: formData.founderExperience,
+        founder_skills: formData.founderSkills,
         school_name: formData.schoolName || null,
         grade_or_age: formData.gradeOrAge,
         founder_email: formData.founderEmail || '',
@@ -235,10 +272,57 @@ export const Submit: React.FC = () => {
                   <input type="text" id="schoolName" name="schoolName" value={formData.schoolName} onChange={handleChange} disabled={isSubmitting} />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="founderEmail">Contact Email (Optional)</label>
-                  <input type="email" id="founderEmail" name="founderEmail" value={formData.founderEmail} onChange={handleChange} disabled={isSubmitting} />
-                  <p className="text-sm text-muted mt-1">Needed if someone wants to join your team!</p>
+                  <label htmlFor="founderMajor">Focus Area / Major (Optional)</label>
+                  <input type="text" id="founderMajor" name="founderMajor" value={formData.founderMajor} onChange={handleChange} disabled={isSubmitting} placeholder="e.g. Computer Science, Business" />
                 </div>
+              </div>
+
+              <div className="form-group">
+                <label>Experience (Optional, max 3)</label>
+                <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                  <input 
+                    type="text" 
+                    value={experienceInput} 
+                    onChange={e => setExperienceInput(e.target.value)} 
+                    disabled={isSubmitting || formData.founderExperience.length >= 3} 
+                    placeholder="e.g. Founder @ Pact, Marketing Intern @ X" 
+                    onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleExperienceAdd(); } }}
+                  />
+                  <Button type="button" onClick={handleExperienceAdd} disabled={isSubmitting || formData.founderExperience.length >= 3 || !experienceInput.trim()} style={{ whiteSpace: 'nowrap' }}>Add</Button>
+                </div>
+                {formData.founderExperience.length > 0 && (
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {formData.founderExperience.map((exp, idx) => (
+                      <li key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'var(--section-bg)', padding: '8px 12px', borderRadius: '6px', fontSize: '0.9rem', border: '1px solid var(--border-color)' }}>
+                        <span>{exp}</span>
+                        <button type="button" onClick={() => handleExperienceRemove(idx)} style={{ color: '#ef4444', fontSize: '0.8rem', fontWeight: 600 }}>Remove</button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>Skills & Interests (Optional)</label>
+                <div className="checkbox-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '8px', maxHeight: '200px', overflowY: 'auto', padding: '8px', border: '1px solid var(--border-color)', borderRadius: '8px', backgroundColor: 'var(--section-bg)' }}>
+                  {SKILLS_AVAILABLE.map(skill => (
+                    <label key={skill} className="checkbox-label" style={{ fontSize: '0.85rem' }}>
+                      <input
+                        type="checkbox"
+                        checked={formData.founderSkills.includes(skill)}
+                        onChange={() => handleSkillToggle(skill)}
+                        disabled={isSubmitting}
+                      />
+                      {skill}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="founderEmail">Contact Email (Optional)</label>
+                <input type="email" id="founderEmail" name="founderEmail" value={formData.founderEmail} onChange={handleChange} disabled={isSubmitting} />
+                <p className="text-sm text-muted mt-1">Needed if someone wants to join your team!</p>
               </div>
             </section>
           </Card>

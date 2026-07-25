@@ -18,6 +18,9 @@ export interface Project {
   recruiting: boolean;
   rolesNeeded: string[];
   founderName: string;
+  founderMajor?: string;
+  founderExperience?: string[];
+  founderSkills?: string[];
   schoolName?: string;
   gradeOrAge: string;
   founderEmail: string;
@@ -77,6 +80,9 @@ export const mapDbToProject = (dbProj: any): Project => ({
   recruiting: dbProj.recruiting,
   rolesNeeded: dbProj.roles_needed || [],
   founderName: dbProj.founder_name,
+  founderMajor: dbProj.founder_major,
+  founderExperience: dbProj.founder_experience || [],
+  founderSkills: dbProj.founder_skills || [],
   schoolName: dbProj.school_name,
   gradeOrAge: dbProj.grade_or_age,
   founderEmail: dbProj.founder_email,
@@ -96,4 +102,22 @@ export const ROLES_AVAILABLE = [
   'Social Media',
   'Video Editor',
   'Other'
+];
+
+export const SKILLS_AVAILABLE = [
+  'Software Engineering',
+  'Frontend Development',
+  'Backend Development',
+  'UI/UX Design',
+  'Graphic Design',
+  'Marketing & Growth',
+  'Sales',
+  'Product Management',
+  'Operations',
+  'Content Creation',
+  'Video Editing',
+  'Social Media',
+  'Data Science',
+  'Machine Learning',
+  'Entrepreneurship'
 ];

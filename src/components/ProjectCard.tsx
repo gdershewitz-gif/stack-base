@@ -93,12 +93,39 @@ export const ProjectCard: React.FC<{ project: Project }> = React.memo(({ project
         <Tag variant="category" value={project.category} />
       </div>
 
-      <div className="pc2-founder">
-        <strong>{project.founderName}</strong> 
+      <div className="pc2-founder-section" style={{ marginTop: '16px', padding: '12px', backgroundColor: 'var(--section-bg)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+          <Avatar name={project.founderName} size="sm" variant="founder" category={project.category} />
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <strong style={{ fontSize: '0.9rem', lineHeight: 1.2 }}>{project.founderName}</strong>
+            {project.founderMajor && (
+              <span className="text-muted" style={{ fontSize: '0.8rem' }}>{project.founderMajor}</span>
+            )}
+          </div>
+        </div>
+        
         {(project.gradeOrAge?.trim() || project.schoolName?.trim()) && (
-          <span className="text-muted ml-2">
-            ({[project.gradeOrAge?.trim(), project.schoolName?.trim()].filter(Boolean).join(', ')})
-          </span>
+          <div className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '8px', paddingLeft: '42px' }}>
+            {[project.gradeOrAge?.trim(), project.schoolName?.trim()].filter(Boolean).join(', ')}
+          </div>
+        )}
+
+        {project.founderExperience && project.founderExperience.length > 0 && (
+          <ul style={{ listStyle: 'none', padding: '0 0 0 42px', margin: '0 0 8px 0', fontSize: '0.85rem', color: 'var(--text-main)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            {project.founderExperience.map((exp, idx) => (
+              <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
+                <span style={{ color: 'var(--text-muted)' }}>•</span> {exp}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {project.founderSkills && project.founderSkills.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', paddingLeft: '42px' }}>
+            {project.founderSkills.map((skill, idx) => (
+              <Tag key={idx} variant="default" value={skill} />
+            ))}
+          </div>
         )}
       </div>
 

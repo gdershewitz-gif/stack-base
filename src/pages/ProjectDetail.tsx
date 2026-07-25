@@ -213,6 +213,49 @@ export const ProjectDetail: React.FC = () => {
             <p className="project-long-desc">{project.longDescription}</p>
           </Card>
 
+          {/* Structured Founder Profile */}
+          <Card padding="md" className="project-founder-section mt-8">
+            <h2 style={{ marginBottom: '16px' }}>Meet the Founder</h2>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+              <Avatar name={project.founderName} size="lg" variant="founder" category={project.category} />
+              <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <h3 style={{ fontSize: '1.2rem', marginBottom: '4px' }}>{project.founderName}</h3>
+                {project.founderMajor && (
+                  <span className="text-muted" style={{ fontSize: '0.95rem', marginBottom: '4px' }}>{project.founderMajor}</span>
+                )}
+                {(project.gradeOrAge?.trim() || project.schoolName?.trim()) && (
+                  <div className="text-muted" style={{ fontSize: '0.9rem', marginBottom: '12px' }}>
+                    {[project.gradeOrAge?.trim(), project.schoolName?.trim()].filter(Boolean).join(', ')}
+                  </div>
+                )}
+                
+                {project.founderExperience && project.founderExperience.length > 0 && (
+                  <div style={{ marginBottom: '16px' }}>
+                    <strong style={{ fontSize: '0.9rem', color: 'var(--text-main)', display: 'block', marginBottom: '8px' }}>Experience</strong>
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {project.founderExperience.map((exp, idx) => (
+                        <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.95rem' }}>
+                          <span style={{ color: 'var(--primary)', marginTop: '2px' }}>•</span> {exp}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {project.founderSkills && project.founderSkills.length > 0 && (
+                  <div>
+                    <strong style={{ fontSize: '0.9rem', color: 'var(--text-main)', display: 'block', marginBottom: '8px' }}>Skills & Interests</strong>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                      {project.founderSkills.map((skill, idx) => (
+                        <Tag key={idx} variant="default" value={skill} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Card>
+
           {/* Comments Section */}
           <Card padding="md" className="comments-section mt-8">
             <h2>
