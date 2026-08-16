@@ -17,8 +17,6 @@ const CATEGORIES: { label: string; value: Category | 'All' }[] = [
   { label: 'Business or Brand', value: 'Business or Brand' },
   { label: 'Nonprofit', value: 'Nonprofit' },
   { label: 'Product or Ecommerce', value: 'Product or Ecommerce' },
-  { label: 'Side Hustle', value: 'Side Hustle' },
-  { label: 'Newsletter or Blog', value: 'Newsletter or Blog' },
   { label: 'Other', value: 'Other' }
 ];
 
