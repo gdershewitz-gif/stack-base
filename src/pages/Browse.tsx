@@ -8,12 +8,14 @@ import { Button } from '../components/Button';
 import type { Category, Project } from '../data/projects';
 import { mapDbToProject, ROLES_AVAILABLE } from '../data/projects';
 import { supabase } from '../lib/supabase';
+import { getCache, setCache } from '../lib/cache';
 import './Browse.css';
 
 export const Browse: React.FC = () => {
-  const [projectsData, setProjectsData] = useState<Project[]>([]);
-  const [totalCount, setTotalCount] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [projectsData, setProjectsData] = useState<Project[]>(() => getCache<Project[]>('browse_projects_default') || []);
+  const [hiringProjects, setHiringProjects] = useState<Project[]>(() => getCache<Project[]>('browse_hiring_projects') || []);
+  const [totalCount, setTotalCount] = useState<number | null>(() => getCache<number>('browse_total_count'));
+  const [isLoading, setIsLoading] = useState(() => projectsData.length === 0);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   
   const [searchQuery, setSearchQuery] = useState('');
@@ -26,6 +28,31 @@ export const Browse: React.FC = () => {
 
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+
+  // Fetch hiring projects once
+  useEffect(() => {
+    const fetchHiring = async () => {
+      const cached = getCache<Project[]>('browse_hiring_projects');
+      if (cached) {
+        setHiringProjects(cached);
+        return;
+      }
+      const { data } = await supabase
+        .from('projects')
+        .select('id, name, short_description, category, demo_url, social_url, recruiting, roles_needed, founder_name, school_name, grade_or_age, upvotes, featured, status, date_added, cover_image_url')
+        .eq('status', 'approved')
+        .eq('recruiting', true)
+        .order('upvotes', { ascending: false })
+        .limit(6);
+
+      if (data) {
+        const mapped = data.map(mapDbToProject);
+        setHiringProjects(mapped);
+        setCache('browse_hiring_projects', mapped);
+      }
+    };
+    fetchHiring();
+  }, []);
 
   useEffect(() => {
     setPage(0);
@@ -78,6 +105,12 @@ export const Browse: React.FC = () => {
         if (page === 0) {
           setProjectsData(mapped);
           setTotalCount(count);
+
+          const isDefaultQuery = !searchQuery && selectedCategories.length === 0 && selectedRoles.length === 0 && !recruitingOnly && activeTab === 'upvotes';
+          if (isDefaultQuery) {
+            setCache('browse_projects_default', mapped);
+            if (count !== null) setCache('browse_total_count', count);
+          }
         } else {
           setProjectsData(prev => [...prev, ...mapped]);
         }
@@ -148,6 +181,24 @@ export const Browse: React.FC = () => {
           />
         </div>
       </div>
+
+      {/* Projects Hiring Now Section */}
+      {hiringProjects.length > 0 && (
+        <div className="browse-hiring-section">
+          <div className="browse-hiring-header">
+            <h2><Users className="text-primary" size={22} /> Projects Hiring Now</h2>
+            <p>Discover student projects that are actively recruiting for teammates.</p>
+          </div>
+          
+          <div className="browse-hiring-scroll">
+            {hiringProjects.map(proj => (
+              <div key={proj.id} className="browse-hiring-card-wrapper">
+                <ProjectCard project={proj} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="browse-layout">
         <aside className="filters-sidebar">

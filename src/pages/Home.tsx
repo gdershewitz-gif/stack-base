@@ -1,200 +1,275 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Users } from 'lucide-react';
+import { ArrowRight, Layers, ChevronDown } from 'lucide-react';
 import { Button } from '../components/Button';
-import { ProjectCard } from '../components/ProjectCard';
-import { ProjectCardSkeleton } from '../components/ProjectCardSkeleton';
 import { SEO } from '../components/SEO';
-import type { Category, Project } from '../data/projects';
-import { mapDbToProject } from '../data/projects';
 import { supabase } from '../lib/supabase';
-import { getCache, setCache } from '../lib/cache';
 import './Home.css';
 
-const CATEGORIES: { label: string; value: Category | 'All' }[] = [
-  { label: 'All Projects', value: 'All' },
-  { label: 'App or Website', value: 'App or Website' },
-  { label: 'Business or Brand', value: 'Business or Brand' },
-  { label: 'Nonprofit', value: 'Nonprofit' },
-  { label: 'Product or Ecommerce', value: 'Product or Ecommerce' },
-  { label: 'Other', value: 'Other' }
+/* ─── Fixed set of 4 real projects for instant, zero-fetch hero render ──── */
+const FIXED_HERO_PROJECTS = [
+  {
+    id: "7bc07f3c-f159-4ad4-91e6-417fcf43b746",
+    name: "Cloey",
+    shortDescription: "AI wardrobe app that helps you dress better and spend less",
+    founderName: "Kevin",
+    recruiting: false,
+    coverImageUrl: "https://oyhwpjqqrzwkzeejrkrh.supabase.co/storage/v1/object/public/project%20images/Screenshot%202026-05-12%20at%207.28.06%20PM.png"
+  },
+  {
+    id: "577ddf0a-a468-44a4-8613-b463d4e7425b",
+    name: "Digital Persuasion Academy",
+    shortDescription: "Free Copywriting Course",
+    founderName: "Grant",
+    recruiting: false,
+    coverImageUrl: "https://oyhwpjqqrzwkzeejrkrh.supabase.co/storage/v1/object/public/project%20images/Screenshot%202026-05-11%20at%204.55.44%20PM.png"
+  },
+  {
+    id: "7de5b7cd-a28f-4bdb-a840-bf498e9f5b67",
+    name: "Pact",
+    shortDescription: "Habit tracking with friends app",
+    founderName: "Marco",
+    recruiting: true,
+    coverImageUrl: "https://oyhwpjqqrzwkzeejrkrh.supabase.co/storage/v1/object/public/project%20images/Screenshot%202026-06-30%20at%206.18.36%20PM.png"
+  },
+  {
+    id: "cfd2f36d-4717-4e0a-9639-13870b898c0e",
+    name: "JellyJelly: Human Social!",
+    shortDescription: "Authentic social media",
+    founderName: "Iqram Magdon-Ismail",
+    recruiting: false,
+    coverImageUrl: "https://oyhwpjqqrzwkzeejrkrh.supabase.co/storage/v1/object/public/project%20images/548887908_18047982359649735_7095410614213960464_n.jpg"
+  }
 ];
 
+/* ─── Hero Floating Project Card ─────────────────────────────── */
+const HeroCard: React.FC<{ project: typeof FIXED_HERO_PROJECTS[0]; className?: string }> = ({ project, className = '' }) => (
+  <Link to={`/project/${project.id}`} className={`hero-card ${className}`}>
+    <div className="hero-card-header">
+      <div className="hero-card-avatar">
+        {project.coverImageUrl
+          ? <img src={project.coverImageUrl} alt={project.name} loading="eager" />
+          : <span>{project.name.charAt(0)}</span>
+        }
+      </div>
+      <div>
+        <div className="hero-card-name">{project.name}</div>
+        <div className="hero-card-founder">{project.founderName}</div>
+      </div>
+    </div>
+    <p className="hero-card-desc">{project.shortDescription}</p>
+    {project.recruiting && (
+      <div className="hero-card-badge">Recruiting</div>
+    )}
+  </Link>
+);
+
+/* ─── FAQ Accordion Item Component ───────────────────────────── */
+const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className={`lp-faq-item ${isOpen ? 'open' : ''}`} onClick={() => setIsOpen(!isOpen)}>
+      <div className="lp-faq-question">
+        <h3>{question}</h3>
+        <ChevronDown size={18} className={`lp-faq-icon ${isOpen ? 'rotate' : ''}`} />
+      </div>
+      {isOpen && <p className="lp-faq-answer">{answer}</p>}
+    </div>
+  );
+};
+
+/* ─── Home / Landing page ─────────────────────────────────────── */
 export const Home: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All');
-  const [projectsData, setProjectsData] = useState<Project[]>([]);
-  const [hiringProjects, setHiringProjects] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState<{ total: number; hiring: number } | null>(null);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const cached = getCache<Project[]>('home_projects');
-      if (cached) {
-        setProjectsData(cached);
-        const hiring = cached.filter(p => p.recruiting).sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
-        setHiringProjects(hiring);
-        setIsLoading(false);
-        return;
-      }
-
-      setIsLoading(true);
-      const { data, error } = await supabase
+    const fetchData = async () => {
+      // Stats
+      const { count: totalCount } = await supabase
         .from('projects')
-        .select('id, name, short_description, category, demo_url, social_url, recruiting, roles_needed, founder_name, school_name, grade_or_age, upvotes, featured, status, date_added, cover_image_url')
-        .eq('status', 'approved')
-        .order('upvotes', { ascending: false })
-        .order('date_added', { ascending: false });
-        
-      if (data && !error) {
-        const mappedData = data.map(mapDbToProject);
-        setProjectsData(mappedData);
-        
-        // Projects that are hiring, sorted by upvotes descending
-        const hiring = mappedData.filter(p => p.recruiting).sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
-        setHiringProjects(hiring);
-        
-        setCache('home_projects', mappedData);
-      } else if (error) {
-        console.error('Error fetching projects:', error);
-      }
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'approved');
 
-      setIsLoading(false);
+      const { count: hiringCount } = await supabase
+        .from('projects')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'approved')
+        .eq('recruiting', true);
+
+      if (totalCount !== null && hiringCount !== null) {
+        setStats({ total: totalCount, hiring: hiringCount });
+      }
     };
-    
-    fetchProjects();
+
+    fetchData();
   }, []);
 
-  const filteredProjects = projectsData.filter(proj => {
-    if (activeCategory === 'All') return true;
-    return proj.category === activeCategory;
-  });
+  const testimonials = [
+    "FoundrBoard helped us connect with our lead frontend engineer in under 48 hours. The community here is unmatched.",
+    "Listing our project gave us our first 200 beta testers and built incredible credibility with student investors.",
+    "No endless application forms. Just submit your project, show what you're building, and start meeting collaborators."
+  ];
 
-  // Calculate dynamic stats from actual data
-  const startupsHiring = useMemo(() => projectsData.filter(p => p.recruiting).length, [projectsData]);
-  const openRoles = useMemo(() => projectsData.reduce((acc, p) => p.recruiting && p.rolesNeeded ? acc + p.rolesNeeded.length : acc, 0), [projectsData]);
+  const faqs = [
+    {
+      question: "Who can post a project on FoundrBoard?",
+      answer: "Any student or young founder building a startup, app, side project, or nonprofit — at any stage. No application or approval process required."
+    },
+    {
+      question: "Is FoundrBoard free to use?",
+      answer: "Yes! FoundrBoard is 100% free to post projects, search for teammates, and connect with other student builders."
+    },
+    {
+      question: "How do I find teammates or co-founders?",
+      answer: "When submitting your project, toggle 'Actively Recruiting' and select the roles you need. Your project will be highlighted in the recruiting feed!"
+    },
+    {
+      question: "What stage does my project need to be at?",
+      answer: "Any stage! Whether it's a wireframe concept, an MVP, or a launched business with active revenue, you are welcome here."
+    }
+  ];
 
   return (
-    <div className="home-page">
+    <div className="landing-page">
       <SEO
-        title="FoundrBoard – Discover Student Startups, Founders & Open Startup Roles"
-        description="FoundrBoard is the premier platform for student founders to showcase what they're building, recruit talented teammates, and discover other student startups."
+        title="FoundrBoard – Find Your Co-Founders and Collaborators"
+        description="FoundrBoard is where student founders post what they're building — at any stage, no application required — to find collaborators and get discovered."
         canonicalUrl="https://foundrboard.com/"
       />
-      {/* Hero Section */}
-      <section className="hero-section">
-        <div className="container hero-container">
-          <Badge />
-          <h1 className="hero-title">
-            The Premier Platform for <span className="text-primary">Young Founders</span>
-          </h1>
-          <p className="hero-subtitle">
-            A community for the next generation of founders — share your project, inspire others, and find your team.
-          </p>
-          <div className="hero-cta-group">
-            <Link to="/browse">
-              <Button size="lg" className="hero-btn">
-                Browse Projects <ArrowRight size={18} className="ml-2" />
-              </Button>
-            </Link>
-            <Link to="/submit">
-              <Button variant="outline" size="lg">Submit Your Project</Button>
-            </Link>
+
+      {/* ══ HERO ══════════════════════════════════════════════════ */}
+      <section className="lp-hero">
+        <div className="container lp-hero-inner">
+          {/* Left: text */}
+          <div className="lp-hero-text">
+            <div className="lp-badge">
+              <Layers size={13} />
+              <span>Student Founders · No Application Required</span>
+            </div>
+
+            <h1 className="lp-headline">
+              Find Your <span className="lp-headline-accent">Co-Founders</span> and Collaborators
+            </h1>
+
+            <p className="lp-subheadline">
+              Post what you're building, attract collaborators, promote your startup, and find real startup work.
+            </p>
+
+            <div className="lp-cta-row">
+              <Link to="/browse">
+                <button className="lp-btn-dark">
+                  Browse Projects <ArrowRight size={17} />
+                </button>
+              </Link>
+              <Link to="/submit">
+                <button className="lp-btn-ghost">Submit Your Project</button>
+              </Link>
+            </div>
+
+            {/* Stats */}
+            {stats && (
+              <div className="lp-inline-stats">
+                <span className="lp-inline-stat">
+                  <strong>{stats.total}</strong> projects posted
+                </span>
+                <span className="lp-inline-stat-sep">·</span>
+                <span className="lp-inline-stat">
+                  <strong>{stats.hiring}</strong> actively recruiting
+                </span>
+              </div>
+            )}
           </div>
-          
-          <div className="hero-stats">
-            <div className="stat-item">
-              <div className="stat-value">{isLoading ? '...' : projectsData.length}</div>
-              <div className="stat-label">Founders</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-value">{isLoading ? '...' : startupsHiring}</div>
-              <div className="stat-label">Projects Recruiting</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-value">{isLoading ? '...' : openRoles}</div>
-              <div className="stat-label">Open Roles</div>
+
+          {/* Right: instant floating card collage using fixed 4 real projects */}
+          <div className="lp-hero-visual">
+            <div className="lp-collage">
+              <HeroCard project={FIXED_HERO_PROJECTS[0]} className="hc-1" />
+              <HeroCard project={FIXED_HERO_PROJECTS[1]} className="hc-2" />
+              <HeroCard project={FIXED_HERO_PROJECTS[2]} className="hc-3" />
+              <HeroCard project={FIXED_HERO_PROJECTS[3]} className="hc-4" />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Hiring Section */}
-      {hiringProjects.length > 0 && (
-        <section className="trending-section container">
-          <div className="trending-header">
-            <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Users className="text-primary" size={28} /> Projects Hiring Now</h2>
-            <p>Discover student projects that are actively recruiting and looking for teammates.</p>
+      {/* ══ HOW IT WORKS ═════════════════════════════════════════ */}
+      <section className="lp-section container">
+        <div className="lp-section-header">
+          <span className="lp-section-tag">Simple Process</span>
+          <h2>How FoundrBoard Works</h2>
+        </div>
+
+        <div className="lp-steps-grid">
+          <div className="lp-step-card">
+            <div className="lp-step-number">01</div>
+            <h3>Post Your Project</h3>
+            <p>Share your startup, app, or side project in under 2 minutes. No pitch deck or application required.</p>
           </div>
-          
-          <div className="trending-horizontal-scroll">
-            {hiringProjects.map(proj => (
-              <div key={proj.id} className="trending-card-wrapper">
-                <ProjectCard project={proj} />
+          <div className="lp-step-card">
+            <div className="lp-step-number">02</div>
+            <h3>Get Discovered</h3>
+            <p>Showcase what you're building to thousands of student developers, designers, and marketers.</p>
+          </div>
+          <div className="lp-step-card">
+            <div className="lp-step-number">03</div>
+            <h3>Connect & Build</h3>
+            <p>Find collaborators for your project or discover real startup work to get hired.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ══ TESTIMONIALS ═════════════════════════════════════════ */}
+      <section className="lp-section lp-bg-alt">
+        <div className="container">
+          <div className="lp-section-header">
+            <span className="lp-section-tag">Loved by Builders</span>
+            <h2>What Student Founders Say</h2>
+            <p>Hear from creators who found teammates and traction on FoundrBoard.</p>
+          </div>
+
+          <div className="lp-testimonials-grid">
+            {testimonials.map((quote, idx) => (
+              <div key={idx} className="lp-testimonial-card">
+                <div className="lp-quote-mark">“</div>
+                <p className="lp-testimonial-quote" style={{ marginBottom: 0 }}>{quote}</p>
               </div>
             ))}
           </div>
-        </section>
-      )}
-
-      {/* Grid Section */}
-      <section className="tools-section container">
-        <div className="tools-header">
-          <h2>All Student Projects</h2>
-          <p>Discover what other students are building right now.</p>
         </div>
-
-        <div className="category-filters">
-          {CATEGORIES.map(cat => (
-            <button 
-              key={cat.value}
-              className={`filter-pill ${activeCategory === cat.value ? 'active' : ''}`}
-              data-active-cat={cat.value}
-              onClick={() => setActiveCategory(cat.value)}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-
-        {isLoading ? (
-          <div className="tools-grid">
-            {[...Array(6)].map((_, i) => (
-              <ProjectCardSkeleton key={i} />
-            ))}
-          </div>
-        ) : filteredProjects.length > 0 ? (
-          <div className="tools-grid">
-            {filteredProjects.map(proj => (
-              <ProjectCard key={proj.id} project={proj} />
-            ))}
-          </div>
-        ) : (
-          <div className="empty-state">
-            <p>No projects found in this category.</p>
-            <Button variant="outline" onClick={() => setActiveCategory('All')}>View All Projects</Button>
-          </div>
-        )}
       </section>
 
-      {/* Bottom CTA Banner */}
-      <section className="bottom-cta-section container">
-        <div className="bottom-cta-box">
-          <div className="bottom-cta-content">
-            <h2>Are you building something?</h2>
-            <p>Share your startup, app, or side hustle with a community of student builders.</p>
+      {/* ══ Q&A / FAQ SECTION ════════════════════════════════════ */}
+      <section className="lp-section container">
+        <div className="lp-section-header">
+          <span className="lp-section-tag">Got Questions?</span>
+          <h2>Frequently Asked Questions</h2>
+          <p>Everything you need to know about publishing and finding projects on FoundrBoard.</p>
+        </div>
+
+        <div className="lp-faq-container">
+          {faqs.map((faq, idx) => (
+            <FAQItem key={idx} question={faq.question} answer={faq.answer} />
+          ))}
+        </div>
+      </section>
+
+      {/* ══ FINAL CTA ════════════════════════════════════════════ */}
+      <section className="lp-final-cta container">
+        <div className="lp-cta-box">
+          <div className="lp-cta-text">
+            <h2>Have something to show? Post your project.</h2>
+            <p>Join over 70+ student founders building the next generation of software, products, and brands.</p>
           </div>
-          <Link to="/submit">
-            <Button size="lg" className="submit-btn-cta">Submit Your Project</Button>
-          </Link>
+          <div className="lp-cta-actions">
+            <Link to="/submit">
+              <Button size="lg" className="submit-btn-cta">Submit Your Project</Button>
+            </Link>
+            <Link to="/browse">
+              <Button variant="outline" size="lg">Browse All Projects</Button>
+            </Link>
+          </div>
         </div>
       </section>
     </div>
   );
 };
-
-const Badge = () => (
-  <div className="hero-badge">
-    <Users size={14} className="hero-badge-icon" />
-    <span>Join the #1 Student Founder Community</span>
-  </div>
-);

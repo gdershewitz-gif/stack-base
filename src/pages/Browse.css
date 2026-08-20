@@ -52,6 +52,61 @@
   outline: none;
 }
 
+/* Projects Hiring Now horizontal carousel */
+.browse-hiring-section {
+  margin-bottom: 36px;
+  background-color: var(--section-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.browse-hiring-header {
+  margin-bottom: 16px;
+}
+
+.browse-hiring-header h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.browse-hiring-header p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.browse-hiring-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  padding-bottom: 12px;
+  scroll-snap-type: x mandatory;
+}
+
+.browse-hiring-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.browse-hiring-scroll::-webkit-scrollbar-track {
+  background: var(--bg-color);
+  border-radius: 3px;
+}
+
+.browse-hiring-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.browse-hiring-card-wrapper {
+  flex: 0 0 320px;
+  scroll-snap-align: start;
+}
+
 .browse-layout {
   display: grid;
   grid-template-columns: 260px 1fr;

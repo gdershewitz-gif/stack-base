@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getMappedCategory } from '../data/projects';
+import { getOptimizedImageUrl } from '../lib/images';
 import './Avatar.css';
 
 interface AvatarProps {
@@ -34,6 +35,15 @@ export const Avatar: React.FC<AvatarProps> = ({
   const initials = getInitials(name);
   const dataCategory = category ? getMappedCategory(category) : 'Other';
 
+  const sizePixelMap = {
+    sm: 80,
+    md: 120,
+    lg: 240,
+    xl: 400
+  };
+
+  const optimizedSrc = src ? getOptimizedImageUrl(src, { width: sizePixelMap[size], format: 'webp' }) : undefined;
+
   const avatarClasses = [
     'fb-avatar',
     `fb-avatar-${size}`,
@@ -41,14 +51,15 @@ export const Avatar: React.FC<AvatarProps> = ({
     className
   ].filter(Boolean).join(' ');
 
-  if (src && !imageError) {
+  if (optimizedSrc && !imageError) {
     return (
       <img
-        src={src}
+        src={optimizedSrc}
         alt={`${name} avatar`}
         className={avatarClasses}
         onError={() => setImageError(true)}
         loading="lazy"
+        decoding="async"
       />
     );
   }

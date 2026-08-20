@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ExternalLink, ArrowLeft, ChevronUp, MessageSquare, Loader2, Instagram } from 'lucide-react';
+import { ExternalLink, ArrowLeft, ChevronUp, MessageSquare, Instagram } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import type { Project, Comment } from '../data/projects';
 import { mapDbToProject } from '../data/projects';
@@ -10,16 +10,18 @@ import { SEO } from '../components/SEO';
 import { Card } from '../components/Card';
 import { Tag } from '../components/Tag';
 import { Avatar } from '../components/Avatar';
+import { ProjectDetailSkeleton } from '../components/ProjectDetailSkeleton';
+import { getCache, setCache } from '../lib/cache';
 import './ProjectDetail.css';
 
 export const ProjectDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [project, setProject] = useState<Project | null>(null);
+  const [project, setProject] = useState<Project | null>(() => id ? getCache<Project>(`project_${id}`) : null);
   const [relatedProjects, setRelatedProjects] = useState<Project[]>([]);
   const [comments, setComments] = useState<Comment[]>([]);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [upvotes, setUpvotes] = useState(0);
+  const [isLoading, setIsLoading] = useState(() => !project);
+  const [upvotes, setUpvotes] = useState(project?.upvotes || 0);
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [isBouncing, setIsBouncing] = useState(false);
 
@@ -29,8 +31,16 @@ export const ProjectDetail: React.FC = () => {
 
   useEffect(() => {
     const fetchProject = async () => {
-      setIsLoading(true);
       if (!id) return;
+
+      const cached = getCache<Project>(`project_${id}`);
+      if (cached) {
+        setProject(cached);
+        setUpvotes(cached.upvotes);
+        setIsLoading(false);
+      } else {
+        setIsLoading(true);
+      }
 
       const { data, error } = await supabase
         .from('projects')
@@ -43,13 +53,14 @@ export const ProjectDetail: React.FC = () => {
         const fetchedProject = mapDbToProject(data);
         setProject(fetchedProject);
         setUpvotes(fetchedProject.upvotes);
+        setCache(`project_${id}`, fetchedProject);
 
         const list = JSON.parse(localStorage.getItem('stagone_upvotes') || '[]');
         if (list.includes(fetchedProject.id)) {
           setHasUpvoted(true);
         }
 
-        // Fetch related projects and comments in parallel
+        // Parallel fetch for related & comments
         const [
           { data: relatedData },
           { data: commentsData }
@@ -146,12 +157,8 @@ export const ProjectDetail: React.FC = () => {
     setIsSubmittingComment(false);
   };
 
-  if (isLoading) {
-    return (
-      <div className="container" style={{ padding: '120px 1.5rem', display: 'flex', justifyContent: 'center' }}>
-        <Loader2 className="animate-spin" size={48} color="var(--primary)" />
-      </div>
-    );
+  if (isLoading && !project) {
+    return <ProjectDetailSkeleton />;
   }
 
   if (!project) {
