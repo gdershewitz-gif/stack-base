@@ -42,8 +42,7 @@ export const Browse: React.FC = () => {
         .select('id, name, short_description, category, demo_url, social_url, recruiting, roles_needed, founder_name, school_name, grade_or_age, upvotes, featured, status, date_added, cover_image_url')
         .eq('status', 'approved')
         .eq('recruiting', true)
-        .order('upvotes', { ascending: false })
-        .limit(6);
+        .order('upvotes', { ascending: false });
 
       if (data) {
         const mapped = data.map(mapDbToProject);

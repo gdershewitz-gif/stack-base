@@ -4,7 +4,7 @@ import { Button } from '../components/Button';
 import { SEO } from '../components/SEO';
 import { Card } from '../components/Card';
 import { supabase } from '../lib/supabase';
-import { ROLES_AVAILABLE, SKILLS_AVAILABLE } from '../data/projects';
+import { ROLES_AVAILABLE } from '../data/projects';
 import type { Category } from '../data/projects';
 import './Submit.css';
 
@@ -21,7 +21,6 @@ export const Submit: React.FC = () => {
     founderName: string;
     founderMajor: string;
     founderExperience: string[];
-    founderSkills: string[];
     schoolName: string;
     gradeOrAge: string;
     founderEmail: string;
@@ -37,7 +36,6 @@ export const Submit: React.FC = () => {
     founderName: '',
     founderMajor: '',
     founderExperience: [],
-    founderSkills: [],
     schoolName: '',
     gradeOrAge: '',
     founderEmail: ''
@@ -63,16 +61,6 @@ export const Submit: React.FC = () => {
         return { ...prev, rolesNeeded: prev.rolesNeeded.filter(r => r !== role) };
       } else {
         return { ...prev, rolesNeeded: [...prev.rolesNeeded, role] };
-      }
-    });
-  };
-
-  const handleSkillToggle = (skill: string) => {
-    setFormData(prev => {
-      if (prev.founderSkills.includes(skill)) {
-        return { ...prev, founderSkills: prev.founderSkills.filter(s => s !== skill) };
-      } else {
-        return { ...prev, founderSkills: [...prev.founderSkills, skill] };
       }
     });
   };
@@ -122,7 +110,7 @@ export const Submit: React.FC = () => {
         founder_name: formData.founderName,
         founder_major: formData.founderMajor || null,
         founder_experience: formData.founderExperience,
-        founder_skills: formData.founderSkills,
+        founder_skills: [],
         school_name: formData.schoolName || null,
         grade_or_age: formData.gradeOrAge,
         founder_email: formData.founderEmail || '',
@@ -300,23 +288,6 @@ export const Submit: React.FC = () => {
                     ))}
                   </ul>
                 )}
-              </div>
-
-              <div className="form-group">
-                <label>Skills & Interests (Optional)</label>
-                <div className="checkbox-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '8px', maxHeight: '200px', overflowY: 'auto', padding: '8px', border: '1px solid var(--border-color)', borderRadius: '8px', backgroundColor: 'var(--section-bg)' }}>
-                  {SKILLS_AVAILABLE.map(skill => (
-                    <label key={skill} className="checkbox-label" style={{ fontSize: '0.85rem' }}>
-                      <input
-                        type="checkbox"
-                        checked={formData.founderSkills.includes(skill)}
-                        onChange={() => handleSkillToggle(skill)}
-                        disabled={isSubmitting}
-                      />
-                      {skill}
-                    </label>
-                  ))}
-                </div>
               </div>
 
               <div className="form-group">
