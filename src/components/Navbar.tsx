@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Layers } from 'lucide-react';
 import { Button } from './Button';
 import './Navbar.css';
 
@@ -10,7 +9,7 @@ export const Navbar: React.FC = () => {
       <div className="container">
         <nav className="navbar">
           <Link to="/" className="navbar-logo">
-            <Layers className="logo-icon text-primary" size={28} />
+            <img src="/logo.png" alt="FoundrBoard Logo" className="navbar-logo-img" />
             <span className="logo-text">FoundrBoard</span>
           </Link>
           

@@ -21,8 +21,12 @@
   text-decoration: none;
 }
 
-.logo-icon {
-  color: var(--primary);
+.navbar-logo-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  object-fit: cover;
+  display: block;
 }
 
 .logo-text {

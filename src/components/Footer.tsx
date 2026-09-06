@@ -7,7 +7,10 @@ export const Footer: React.FC = () => {
       <div className="container">
         <div className="footer-content">
           <div className="footer-info" style={{ textAlign: 'center', margin: '0 auto' }}>
-            <h3 className="footer-logo">FoundrBoard</h3>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <img src="/logo.png" alt="FoundrBoard" style={{ width: '28px', height: '28px', borderRadius: '7px', display: 'block' }} />
+              <h3 className="footer-logo" style={{ margin: 0 }}>FoundrBoard</h3>
+            </div>
             <p className="footer-tagline">Where student founders share what they built — and find their team.</p>
           </div>
         </div>
