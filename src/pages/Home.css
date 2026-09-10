@@ -44,12 +44,12 @@
 
 .lp-headline {
   font-family: 'Outfit', sans-serif;
-  font-size: 3.75rem;
+  font-size: 4.5rem;
   font-weight: 800;
-  line-height: 1.07;
-  letter-spacing: -0.035em;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
   color: var(--text-main);
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 .lp-headline-accent {
@@ -57,10 +57,10 @@
 }
 
 .lp-subheadline {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   color: var(--text-muted);
-  line-height: 1.65;
-  max-width: 480px;
+  line-height: 1.6;
+  max-width: 540px;
   margin-bottom: 36px;
 }
 
@@ -491,6 +491,10 @@
   .lp-hero-text {
     align-items: center;
     text-align: center;
+  }
+
+  .lp-headline {
+    font-size: 3.25rem;
   }
 
   .lp-hero-visual {

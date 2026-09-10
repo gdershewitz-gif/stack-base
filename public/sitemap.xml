@@ -70,38 +70,14 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/866e768e-76de-4fbb-ba95-fe44153d3aad</loc>
-    <lastmod>2026-04-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://foundrboard.com/project/373276c6-f0e8-4537-bb8d-cad32ef783f2</loc>
     <lastmod>2026-04-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/b50eb8d9-45a4-4356-bca7-42f380986865</loc>
-    <lastmod>2026-08-03</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/32488c47-f209-486f-ad97-1aee35cc507b</loc>
-    <lastmod>2026-07-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://foundrboard.com/project/afee5b77-8b51-4616-964f-6a738bbfeba0</loc>
     <lastmod>2026-06-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/68cbbab4-ea5a-4438-9f12-64f7db0ce930</loc>
-    <lastmod>2026-05-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -114,36 +90,6 @@
   <url>
     <loc>https://foundrboard.com/project/577ddf0a-a468-44a4-8613-b463d4e7425b</loc>
     <lastmod>2026-03-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/82e01eea-b7d4-4469-85da-6023a8c1e466</loc>
-    <lastmod>2026-05-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/73a02478-0a5d-4318-8dfd-dccf6addeb2c</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/476916ef-473f-48e0-8e74-3be2eb3025e4</loc>
-    <lastmod>2026-07-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/0c87cc67-54e4-4777-8a35-32954da27aca</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/a000438c-e6a0-42fc-acfa-0b2810e3dd03</loc>
-    <lastmod>2026-08-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -178,12 +124,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/4d4a3b29-4486-4ce7-9b90-4475551f1413</loc>
-    <lastmod>2026-07-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://foundrboard.com/project/a5a4061d-3459-478d-9128-96ae63a0994b</loc>
     <lastmod>2026-08-23</lastmod>
     <changefreq>weekly</changefreq>
@@ -196,6 +136,90 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://foundrboard.com/project/b343da28-ac85-4fb2-b395-698db43fa3ff</loc>
+    <lastmod>2026-06-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/09948573-8275-4498-937d-65e47daee885</loc>
+    <lastmod>2026-08-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/b330c9c2-c7b2-4183-9a5c-bb910c38379d</loc>
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/626da975-c4dd-4edf-9fe7-6b7e65773fa5</loc>
+    <lastmod>2026-04-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/866e768e-76de-4fbb-ba95-fe44153d3aad</loc>
+    <lastmod>2026-04-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/b50eb8d9-45a4-4356-bca7-42f380986865</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/32488c47-f209-486f-ad97-1aee35cc507b</loc>
+    <lastmod>2026-07-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/68cbbab4-ea5a-4438-9f12-64f7db0ce930</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/82e01eea-b7d4-4469-85da-6023a8c1e466</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/73a02478-0a5d-4318-8dfd-dccf6addeb2c</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/476916ef-473f-48e0-8e74-3be2eb3025e4</loc>
+    <lastmod>2026-07-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/0c87cc67-54e4-4777-8a35-32954da27aca</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/a000438c-e6a0-42fc-acfa-0b2810e3dd03</loc>
+    <lastmod>2026-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/4d4a3b29-4486-4ce7-9b90-4475551f1413</loc>
+    <lastmod>2026-07-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://foundrboard.com/project/6240a7a3-4863-4ab2-b4af-2f05936a354d</loc>
     <lastmod>2026-09-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -204,6 +228,12 @@
   <url>
     <loc>https://foundrboard.com/project/8d5b8c76-19cb-4adf-9aa7-04b9530fe4bf</loc>
     <lastmod>2026-04-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/1cc66103-0157-4bc1-a2f5-29e0953e5cc8</loc>
+    <lastmod>2026-08-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -226,20 +256,14 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/b343da28-ac85-4fb2-b395-698db43fa3ff</loc>
-    <lastmod>2026-06-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/09948573-8275-4498-937d-65e47daee885</loc>
-    <lastmod>2026-08-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://foundrboard.com/project/bc3fe53a-fb1f-4d9d-b781-558c713bb762</loc>
     <lastmod>2026-08-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/4a7602d3-ea59-4b98-a2d3-ed89311e0b3c</loc>
+    <lastmod>2026-08-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -256,12 +280,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/b330c9c2-c7b2-4183-9a5c-bb910c38379d</loc>
-    <lastmod>2026-08-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://foundrboard.com/project/57238b18-3e80-4072-8bed-60cd224b8c3f</loc>
     <lastmod>2026-07-05</lastmod>
     <changefreq>weekly</changefreq>
@@ -274,8 +292,14 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/626da975-c4dd-4edf-9fe7-6b7e65773fa5</loc>
-    <lastmod>2026-04-27</lastmod>
+    <loc>https://foundrboard.com/project/5b3d672b-1683-4193-bfb6-ffa4ae19d225</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/014baa98-8820-4ef5-8cd6-311aec11a5e1</loc>
+    <lastmod>2026-08-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -304,14 +328,14 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/7bc07f3c-f159-4ad4-91e6-417fcf43b746</loc>
-    <lastmod>2026-04-08</lastmod>
+    <loc>https://foundrboard.com/project/63b99be8-1c77-4a65-9850-65a1ecba39e8</loc>
+    <lastmod>2026-07-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/1cc66103-0157-4bc1-a2f5-29e0953e5cc8</loc>
-    <lastmod>2026-08-20</lastmod>
+    <loc>https://foundrboard.com/project/7bc07f3c-f159-4ad4-91e6-417fcf43b746</loc>
+    <lastmod>2026-04-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -342,12 +366,6 @@
   <url>
     <loc>https://foundrboard.com/project/9562017a-4e52-4e1a-be91-968d066cf571</loc>
     <lastmod>2026-07-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/4a7602d3-ea59-4b98-a2d3-ed89311e0b3c</loc>
-    <lastmod>2026-08-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -388,20 +406,26 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/014baa98-8820-4ef5-8cd6-311aec11a5e1</loc>
-    <lastmod>2026-08-17</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://foundrboard.com/project/eec730e0-8905-4e3a-9523-cb8e038da42d</loc>
     <lastmod>2026-04-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://foundrboard.com/project/a657ea93-c042-4269-adb5-1d1755149786</loc>
+    <lastmod>2026-06-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://foundrboard.com/project/23e282b3-cae8-4442-9b07-a4b81c7dc7ac</loc>
     <lastmod>2026-08-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/984ae7f5-d030-4602-a230-0ca096da1d38</loc>
+    <lastmod>2026-05-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -418,92 +442,14 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/63b99be8-1c77-4a65-9850-65a1ecba39e8</loc>
-    <lastmod>2026-07-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/bfe848d5-420e-424b-a84d-d01bb749d0d6</loc>
-    <lastmod>2026-04-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/9883e535-ef8e-40e0-ad52-0135b45518d1</loc>
-    <lastmod>2026-04-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/612f0515-cfdc-41ff-8525-1ce906429601</loc>
-    <lastmod>2026-08-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/ac7f91fe-856d-4d7b-b514-dc284abd9d7f</loc>
-    <lastmod>2026-07-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/a657ea93-c042-4269-adb5-1d1755149786</loc>
-    <lastmod>2026-06-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/90f22009-6dd7-432b-a5e7-9a86d2b4c5e3</loc>
-    <lastmod>2026-04-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/984ae7f5-d030-4602-a230-0ca096da1d38</loc>
-    <lastmod>2026-05-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/522ef9e9-0776-4aa5-b8eb-29ba1a3bf8b7</loc>
-    <lastmod>2026-04-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/79a05a23-3fa3-40c3-be90-515483183712</loc>
-    <lastmod>2026-08-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://foundrboard.com/project/9b5a2008-bb96-45ec-ad27-7a56a5081440</loc>
     <lastmod>2026-08-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/aa11df11-2620-4355-8d3a-072afdb2d79b</loc>
-    <lastmod>2026-05-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://foundrboard.com/project/c189f409-75af-4f46-b1e6-2612a80122dd</loc>
     <lastmod>2026-08-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/baaaf0ed-8657-4e22-be0e-20ef342dcb2e</loc>
-    <lastmod>2026-06-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/1fe2154d-c1c1-4022-9962-3b1fcda732d5</loc>
-    <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -526,8 +472,74 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://foundrboard.com/project/bfe848d5-420e-424b-a84d-d01bb749d0d6</loc>
+    <lastmod>2026-04-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/9883e535-ef8e-40e0-ad52-0135b45518d1</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://foundrboard.com/project/704e8701-4273-4db2-81bd-4946c70be950</loc>
     <lastmod>2026-08-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/612f0515-cfdc-41ff-8525-1ce906429601</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/ac7f91fe-856d-4d7b-b514-dc284abd9d7f</loc>
+    <lastmod>2026-07-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/90f22009-6dd7-432b-a5e7-9a86d2b4c5e3</loc>
+    <lastmod>2026-04-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/522ef9e9-0776-4aa5-b8eb-29ba1a3bf8b7</loc>
+    <lastmod>2026-04-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/79a05a23-3fa3-40c3-be90-515483183712</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/2867d9d8-779f-4313-95b8-26e12a16cf95</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/aa11df11-2620-4355-8d3a-072afdb2d79b</loc>
+    <lastmod>2026-05-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/baaaf0ed-8657-4e22-be0e-20ef342dcb2e</loc>
+    <lastmod>2026-06-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/1fe2154d-c1c1-4022-9962-3b1fcda732d5</loc>
+    <lastmod>2026-07-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -544,26 +556,32 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/2867d9d8-779f-4313-95b8-26e12a16cf95</loc>
-    <lastmod>2026-07-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://foundrboard.com/project/bfcc0fb2-6124-45f3-9f2c-0c9849fb3f5a</loc>
     <lastmod>2026-05-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/a2536ffb-ce8a-478c-806e-07b8e61df3e5</loc>
-    <lastmod>2026-04-07</lastmod>
+    <loc>https://foundrboard.com/project/290e8aed-0eec-46d8-ad26-c23b44ea235b</loc>
+    <lastmod>2026-05-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://foundrboard.com/project/290e8aed-0eec-46d8-ad26-c23b44ea235b</loc>
-    <lastmod>2026-05-11</lastmod>
+    <loc>https://foundrboard.com/project/820d4d0c-c7db-4a62-8166-d2ced15be045</loc>
+    <lastmod>2026-06-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/cfb541c0-8723-4e3a-aab5-3ab84d6a4cb1</loc>
+    <lastmod>2026-07-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://foundrboard.com/project/a2536ffb-ce8a-478c-806e-07b8e61df3e5</loc>
+    <lastmod>2026-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -582,18 +600,6 @@
   <url>
     <loc>https://foundrboard.com/project/59ab5ad5-7a7e-4460-949f-5a7e520aca41</loc>
     <lastmod>2026-08-29</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/820d4d0c-c7db-4a62-8166-d2ced15be045</loc>
-    <lastmod>2026-06-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://foundrboard.com/project/cfb541c0-8723-4e3a-aab5-3ab84d6a4cb1</loc>
-    <lastmod>2026-07-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

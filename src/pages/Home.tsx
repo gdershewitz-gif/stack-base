@@ -132,8 +132,8 @@ export const Home: React.FC = () => {
   return (
     <div className="landing-page">
       <SEO
-        title="FoundrBoard – Find Your Co-Founders and Collaborators"
-        description="FoundrBoard is where student founders post what they're building — at any stage, no application required — to find collaborators and get discovered."
+        title="FoundrBoard – Discover Real Startup Work"
+        description="Post what you're building, find collaborators, and connect with student founders — no application required."
         canonicalUrl="https://foundrboard.com/"
       />
 
@@ -148,11 +148,11 @@ export const Home: React.FC = () => {
             </div>
 
             <h1 className="lp-headline">
-              Find Your <span className="lp-headline-accent">Co-Founders</span> and Collaborators
+              Discover <span className="lp-headline-accent">Real Startup</span> Work
             </h1>
 
             <p className="lp-subheadline">
-              Post what you're building, attract collaborators, promote your startup, and find real startup work.
+              Post what you're building, find collaborators, and connect with student founders — no application required.
             </p>
 
             <div className="lp-cta-row">
